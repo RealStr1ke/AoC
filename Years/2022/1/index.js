@@ -83,7 +83,7 @@ function part2() {
 	const largest = totalCalories.slice(0, 3);
 
 	// Combine the three largest elements and return the result
-	console.log(largest)
+	console.log(largest);
 	return largest[0] + largest[1] + largest[2];
 }
 

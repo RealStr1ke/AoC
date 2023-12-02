@@ -4,30 +4,30 @@ function score(elf, you) {
 	const combined = elf + you;
 	let yourScore = 0;
 	switch (combined) {
-        case 'AX':
-        case 'BY':
-        case 'CZ':
-            yourScore += 3; break;
-        case 'AY':
-        case 'BZ':
-        case 'CX':
-            yourScore += 6; break;
-        case 'AZ':
-        case 'BX':
-        case 'CY':
-            yourScore += 0; break;
+	case 'AX':
+	case 'BY':
+	case 'CZ':
+		yourScore += 3; break;
+	case 'AY':
+	case 'BZ':
+	case 'CX':
+		yourScore += 6; break;
+	case 'AZ':
+	case 'BX':
+	case 'CY':
+		yourScore += 0; break;
 	}
 
 	switch (you) {
-        case 'X':
-            yourScore += 1;
-            break;
-        case 'Y':
-            yourScore += 2;
-            break;
-        case 'Z':
-            yourScore += 3;
-            break;
+	case 'X':
+		yourScore += 1;
+		break;
+	case 'Y':
+		yourScore += 2;
+		break;
+	case 'Z':
+		yourScore += 3;
+		break;
 	}
 
 	// switch (combined) {
@@ -67,57 +67,57 @@ function part1() {
 }
 
 function solve2(elf, outcome) {
-    // For elf: A is Rock, B is Paper, C is Scissors
-    // For you: X is Rock, Y is Paper, Z is Scissors
-    // For outcome: X is a loss for you, Y is a draw, Z is a win for you
+	// For elf: A is Rock, B is Paper, C is Scissors
+	// For you: X is Rock, Y is Paper, Z is Scissors
+	// For outcome: X is a loss for you, Y is a draw, Z is a win for you
 
-    let yourMove = '';
-    switch (outcome) {
-        case 'X':
-            switch (elf) {
-                case 'A':
-                    yourMove = 'Z';
-                    break;
-                case 'B':
-                    yourMove = 'X';
-                    break;
-                case 'C':
-                    yourMove = 'Y';
-                    break;
-            }
-            break;
-        case 'Y':
-            switch (elf) {
-                case 'A':
-                    yourMove = 'X';
-                    break;
-                case 'B':
-                    yourMove = 'Y';
-                    break;
-                case 'C':
-                    yourMove = 'Z';
-                    break;
-            }
-            break;
-        case 'Z':
-            switch (elf) {
-                case 'A':
-                    yourMove = 'Y';
-                    break;
-                case 'B':
-                    yourMove = 'Z';
-                    break;
-                case 'C':
-                    yourMove = 'X';
-                    break;
-            }
-            break;
-    }
+	let yourMove = '';
+	switch (outcome) {
+	case 'X':
+		switch (elf) {
+		case 'A':
+			yourMove = 'Z';
+			break;
+		case 'B':
+			yourMove = 'X';
+			break;
+		case 'C':
+			yourMove = 'Y';
+			break;
+		}
+		break;
+	case 'Y':
+		switch (elf) {
+		case 'A':
+			yourMove = 'X';
+			break;
+		case 'B':
+			yourMove = 'Y';
+			break;
+		case 'C':
+			yourMove = 'Z';
+			break;
+		}
+		break;
+	case 'Z':
+		switch (elf) {
+		case 'A':
+			yourMove = 'Y';
+			break;
+		case 'B':
+			yourMove = 'Z';
+			break;
+		case 'C':
+			yourMove = 'X';
+			break;
+		}
+		break;
+	}
 
-    return yourMove;
+	return yourMove;
 }
 function part2() {
-    const fs = require('fs');
+	const fs = require('fs');
 	const path = require('path');
 
 	// Read input file
@@ -127,7 +127,7 @@ function part2() {
 	for (let i = 0; i < strategy.length; i++) {
 		const elf = strategy[i].split(' ')[0];
 		const outcome = strategy[i].split(' ')[1];
-        const you = solve2(elf, outcome);
+		const you = solve2(elf, outcome);
 		const gameScore = score(elf, you);
 		yourScore += gameScore;
 

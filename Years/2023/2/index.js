@@ -101,5 +101,5 @@ fs.open('input.txt', 'r', (err, fd) => {
 	}
 
 	// Print the sum
-    console.log(`Part 2 Result: ${sum}`)
+	console.log(`Part 2 Result: ${sum}`);
 });
