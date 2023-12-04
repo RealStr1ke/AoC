@@ -6,7 +6,7 @@ Hi! This is my repository for my solutions to [Advent of Code](https://adventofc
 
 ## Usage
 
-You can find my solutions in the `events` folder. Each yearly event has its own folder, and each day has its own folder within that. Each day folder contains the input I was given for the challenge and the program I made to calculate my solution (could be any language I choose). I'll also include a `README.md` file in each day folder that explains the challenge (with a link) and my solution whenever I get around to it.
+You can find my solutions in the [`events`](events) folder. Each yearly event has its own folder, and each day has its own folder within that. Each day folder contains the input I was given for the challenge and the program I made to calculate my solution (could be any language I choose). I'll also include a `README.md` file in each day folder that explains the challenge (with a link) and my solution whenever I get around to it.
 
 ## Contributing
 
