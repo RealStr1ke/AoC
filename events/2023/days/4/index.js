@@ -107,5 +107,7 @@ function part2() {
     });
 }
 
-part1();
-part2();
+module.exports = {
+    part1,
+    part2
+};

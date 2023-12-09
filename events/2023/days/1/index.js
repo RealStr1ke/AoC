@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 // Function that checks if char is num
 function isNum(char) {
@@ -6,11 +7,11 @@ function isNum(char) {
 }
 
 // Part 1
+function part1() {
+	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 
-// Open a file called input1.txt
-fs.open('input.txt', 'r', (err, fd) => {
-	let totalNum = 0; // Total number
-	for (const line of fs.readFileSync(fd, 'utf8').split('\n')) {
+	let result = 0;
+	for (const line of data.split('\n')) {
 		// For each line, turn each string into a character array
 		const charArray = line.split('');
 
@@ -29,18 +30,19 @@ fs.open('input.txt', 'r', (err, fd) => {
 
 		// Add that number to the total
 		// console.log(combinedNum);
-		totalNum += combinedNum;
+		result += combinedNum;
 	}
-	console.log(`Part 1 Result: ${totalNum}`);
-});
+
+	return result;
+}
 
 // Part 2
+function part2() {
+	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 
-// Open a file called input.txt
-fs.open('input.txt', 'r', (err, fd) => {
-	let totalNum = 0;
+	let result = 0;
 	// For each line, turn each string into a character array
-	for (const line of fs.readFileSync(fd, 'utf8').split('\n')) {
+	for (const line of data.split('\n')) {
 		const originalLine = line;
 
 		const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
@@ -65,7 +67,13 @@ fs.open('input.txt', 'r', (err, fd) => {
 		const combinedNum = parseInt(firstNum + lastNum);
 
 		// Add that number to the total
-		totalNum += combinedNum;
+		result += combinedNum;
 	}
-	console.log(`Part 2 Result: ${totalNum}`);
-});
+
+	return result;
+}
+
+module.exports = {
+	part1,
+	part2,
+};
