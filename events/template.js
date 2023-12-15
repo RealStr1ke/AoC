@@ -1,36 +1,32 @@
 const fs = require('fs');
+const path = require('path');
 
 function part1() {
-    fs.open('input.txt', 'r', (err, fd) => {
-        // Any variables
-        // let result = 0;
-        let result;
+    const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+    let result = 0;
+
+    for (const line of data.split('\n')) {
         
-        for (const line of fs.readFileSync(fd, 'utf8').split('\n')) {
-            
-            
-        }
-    
-        // Print the result
-        console.log(`Part 1 Result: ${result}`);
-    });
+    }
+
+    return result;
 }
 
 function part2() {
-    fs.open('input.txt', 'r', (err, fd) => {
-        // Any variables
-        // let result = 0;
-        let result;
+    const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+    let result = 0;
+
+    for (const line of data.split('\n')) {
         
-        for (const line of fs.readFileSync(fd, 'utf8').split('\n')) {
-            
-            
-        }
-    
-        // Print the result
-        console.log(`Part 2 Result: ${result}`);
-    });
+    }
+
+    return result;
 }
 
-part1();
-part2();
+// console.log(`Part 1: ${part1()}`);
+// console.log(`Part 2: ${part2()}`);
+
+module.exports = {
+    part1,
+    part2
+};
