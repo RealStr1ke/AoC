@@ -16,14 +16,7 @@ const args = commandLineArgs(optionDefinitions);
 const year = args.year || new Date().getFullYear();
 
 // Find all of the years in the events folder
-const years = fs.readdirSync(`${__dirname}/events/${year}/days`)
-	.filter(file => fs.statSync(`${__dirname}/events/${year}/days/${file}`).isDirectory());
 
-// For each directory, find the index.js file and add it to the days object
-const days = {};
-for (const dir of dirs) {
-	days[dir] = require(`${__dirname}/years/${year}/days/${dir}/index.js`);
-}
 
 if (args.day && args.part) {
 	const stopwatch = new Stopwatch(true);
