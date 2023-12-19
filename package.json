@@ -2,6 +2,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "command-line-args": "^5.2.1",
+    "dijkstrajs": "^1.0.3",
     "mathjs": "^12.2.0",
     "statman-stopwatch": "^2.18.0"
   }

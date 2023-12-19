@@ -21,10 +21,10 @@ const year = args.year || new Date().getFullYear();
 if (args.day && args.part) {
 	const stopwatch = new Stopwatch(true);
 	const result = days[args.day][`part${args.part}`]();
-	console.log(`Year ${year}, Day ${args.day} (Part ${args.part}) Result: ${result}`);
-	console.log(`Execution Time: ${stopwatch.read().toPrecision(3)}ms`);
+	console.log(`❄️ | Year ${year}, Day ${args.day} (Part ${args.part}) Result: ${result}`);
+	console.log(`❄️ | Execution Time: ${stopwatch.read().toPrecision(3)}ms`);
 } else if (args.help) {
-	console.log('Usage: node main.js -y [year] -d [day] -p [part]');
+	console.log('❄️ | Usage: node main.js -y [year] -d [day] -p [part]');
 } else {
-	console.log('Please specify a year, day and part number with the -y, -d and -p flags');
+	console.log('❄️ | Please specify a year, day and part number with the -y, -d and -p flags');
 }
