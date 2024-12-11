@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // Function that checks if char is num
 function isNum(char) {
@@ -73,7 +73,7 @@ function part2() {
 	return result;
 }
 
-module.exports = {
+export default {
 	part1,
 	part2,
 };

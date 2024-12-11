@@ -10,6 +10,28 @@ You can find my solutions in the [`events`](events) folder. Each yearly event ha
 
 **Note:** If you see any gaps in the days, it's either because I haven't gotten around to solving it correctly, or I'm still rewriting it for readability. 
 
+## CLI
+
+***Note: `(year)` and `(day)` are optional parameters. If you don't provide them, the CLI will use the current year and day. However, if the current day isn't between December 1st and December 25th, the CLI will do nothing until you pass the `(year)` and `(day)` parameters.***
+
+`aocs help` - Displays the help menu for the following commands.
+
+`aocs init` - Initializes the Advent of Code CLI. This will create a `session.txt` file in the root directory of this repository and prompt you to enter your session cookie in order to save it to that file. You can find your session cookie by logging into the Advent of Code website, opening the developer tools, going to the `Application` tab, and copying the value of the `session` cookie.
+
+`aocs init --session [session]` - Initializes the Advent of Code CLI with the given session cookie.
+
+`aocs create (year) (day) [--input]` - Creates a new folder for the given year and day with the template `index.js` solution file, `input.txt` file, and `README.md` file with the challenge description. If `--input` is provided, it'll fetch the input for the given year and day and save it to the `input.txt` file instead of saving a blank input file.
+
+`aocs input (year) (day) [--save]` - Displays the correct input for the given year and day. If `--save` is provided, it'll save the input to the `input.txt` file in the day's folder.
+
+`aocs run (year) (day) -p [part]` - Runs the solution for the given year and day with the given part. If no part is given, it runs both parts.
+
+`aocs test (year) (day) -p [part]` - Runs the tests for the given year and day with the given part. If no part is given, it runs both parts.
+
+`aocs view (year) (day) -p [part]` - Displays the challenge text for the given year and day. If no part is given, it'll display both parts.
+
+`aocs submit (year) (day) -p [part]` - Submits the solution for the given year and day with the given part.
+
 ## Contributing
 
 I'll most likely not be accepting pull requests to my solution code other than cleanup or optimization (maybe), but you may contribute to the repository by editing the `README.md` files. If you see a typo, something that could be worded better, or just innacuracies with the explanations, feel free to open a pull request with your changes. I'll review it and merge it if I like it. If you have a suggestion for a different solution to a challenge, you may open an issue and I'll take a look at it, but I won't be making new solution files, I'll probably just be explaning other routes to the solution in the `README.md` file.

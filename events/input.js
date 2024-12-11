@@ -1,5 +1,5 @@
-const axios = require('axios');
-const commandLineArgs = require('command-line-args');
+import { get } from 'axios';
+import commandLineArgs from 'command-line-args';
 
 const optionDefinitions = [
 	{ name: 'year', alias: 'y', type: Number },
@@ -17,7 +17,7 @@ async function getInput(year, day) {
 	const headers = { Cookie: `session=${sessionCookie}` };
 
 	try {
-		const response = await axios.get(url, { headers });
+		const response = await get(url, { headers });
 		return response.data;
 	} catch (error) {
 		console.error('Error retrieving input:', error.message);
