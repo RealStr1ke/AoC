@@ -9,7 +9,7 @@ const optionDefinitions = [
 
 const options = commandLineArgs(optionDefinitions);
 
-const endpoint = `https://adventofcode.com`;
+const endpoint = 'https://adventofcode.com';
 const sessionCookie = require('fs').readFileSync('session.txt', 'utf8');
 
 async function getInput(year, day) {
@@ -26,7 +26,7 @@ async function getInput(year, day) {
 }
 
 async function saveInputToFile(input, filePath) {
-	const fs = require('fs');
+	import fs from 'fs';
 
 	try {
 		await fs.promises.writeFile(filePath, input);

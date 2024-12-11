@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 const colors = require('colors');
 const Stopwatch = require('statman-stopwatch');
 const commandLineArgs = require('command-line-args');
@@ -21,7 +21,7 @@ function main() {
 		{ name: 'day', alias: 'd', type: Number },
 		{ name: 'part', alias: 'p', type: String },
 		{ name: 'help', alias: 'h', type: Boolean },
-		{ name: 'input', alias: 'i', type: Boolean, defaultOption: true },
+		// 		{ name: 'input', alias: 'i', type: Boolean, defaultOption: true },
 	];
 
 	const args = commandLineArgs(optionDefinitions);

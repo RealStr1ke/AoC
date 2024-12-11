@@ -1,11 +1,26 @@
 {
   "dependencies": {
+    "@oclif/core": "^4.0.36",
     "axios": "^1.6.2",
     "colors": "^1.4.0",
     "command-line-args": "^5.2.1",
     "dijkstrajs": "^1.0.3",
     "heap-js": "^2.3.0",
     "mathjs": "^12.2.0",
-    "statman-stopwatch": "^2.18.0"
+    "statman-stopwatch": "^2.18.0",
+    "typescript-eslint": "^8.18.0"
+  },
+  "bin": {
+    "aocs": "./bin/run.js"
+  },
+  "oclif": {
+    "bin": "aocs",
+    "commands": "./dist/commands",
+    "dirname": "aocs",
+    "topicSeparator": ":"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.67",
+    "ts-node": "^10.9.2"
   }
 }
