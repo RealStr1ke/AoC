@@ -5,7 +5,7 @@ const commandLineArgs = require('command-line-args');
 
 function runPart(day, part) {
 	const stopwatch = new Stopwatch(true);
-	const result = day[`part${part}`]();
+	const result = day.default[`part${part}`]();
 	stopwatch.stop();
 	return { result, time: stopwatch.read().toPrecision(3) };
 }
@@ -60,6 +60,7 @@ function main() {
 	}
 
 	if (args.day && args.part) {
+		// const day = require(`./events/${year}/days/${args.day}/index.js`);
 		const day = require(`./events/${year}/days/${args.day}/index.js`);
 		const stringBuilder = [];
 		if (args.part === 'both') {
