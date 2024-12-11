@@ -6,8 +6,8 @@
 
 function part1() {
 	// Get required modules
-	const fs = require('fs');
-	const path = require('path');
+	import fs from 'fs';
+	import path from 'path';
 
 	// Read input file
 	const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
@@ -48,8 +48,8 @@ function part1() {
 // Part 2
 function part2() {
 	// Get required modules
-	const fs = require('fs');
-	const path = require('path');
+	import fs from 'fs';
+	import path from 'path';
 
 	// Read input file
 	const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');

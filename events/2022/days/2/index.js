@@ -46,8 +46,8 @@ function score(elf, you) {
 }
 
 function part1() {
-	const fs = require('fs');
-	const path = require('path');
+	import fs from 'fs';
+	import path from 'path';
 
 	// Read input file
 	const strategy = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').split('\n');
@@ -117,8 +117,8 @@ function solve2(elf, outcome) {
 	return yourMove;
 }
 function part2() {
-	const fs = require('fs');
-	const path = require('path');
+	import fs from 'fs';
+	import path from 'path';
 
 	// Read input file
 	const strategy = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').split('\n');
