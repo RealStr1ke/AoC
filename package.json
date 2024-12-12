@@ -16,8 +16,6 @@
 		"heap-js": "^2.5.0",
 		"inquirer": "^12.2.0",
 		"mathjs": "^12.4.3",
-		"puppeteer": "^23.10.3",
-		"puppeteer-core": "^23.10.3",
 		"statman-stopwatch": "^2.18.1",
 		"typescript-eslint": "^8.18.0"
 	},
