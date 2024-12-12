@@ -16,21 +16,19 @@ You can find my solutions in the [`events`](events) folder. Each yearly event ha
 
 `aocs help` - Displays the help menu for the following commands.
 
-`aocs init` - Initializes the Advent of Code CLI. This will create a `session.txt` file in the root directory of this repository and prompt you to enter your session cookie in order to save it to that file. You can find your session cookie by logging into the Advent of Code website, opening the developer tools, going to the `Application` tab, and copying the value of the `session` cookie.
-
-`aocs init --session [session]` - Initializes the Advent of Code CLI with the given session cookie.
+`aocs init (session)` - Initializes the Advent of Code CLI. This will create a `config.json` file in the root directory of this repository and prompt you to enter your session cookie in order to save it to that file. You can find your session cookie by logging into the Advent of Code website, opening the developer tools, going to the `Application` tab, and copying the value of the `session` cookie. If `(session)` is provided, it'll save that value to the `config.json` file instead of prompting you.
 
 `aocs create (year) (day) [--input]` - Creates a new folder for the given year and day with the template `index.js` solution file, `input.txt` file, and `README.md` file with the challenge description. If `--input` is provided, it'll fetch the input for the given year and day and save it to the `input.txt` file instead of saving a blank input file.
 
 `aocs input (year) (day) [--save]` - Displays the correct input for the given year and day. If `--save` is provided, it'll save the input to the `input.txt` file in the day's folder.
 
-`aocs run (year) (day) -p [part]` - Runs the solution for the given year and day with the given part. If no part is given, it runs both parts.
+`aocs run (year) (day) -p [part]` - Runs the solution for the given year and day with the given part. This will save the result to the `config.json` file for later use. If no part is given, it runs both parts.
 
 `aocs test (year) (day) -p [part]` - Runs the tests for the given year and day with the given part. If no part is given, it runs both parts.
 
 `aocs view (year) (day) -p [part]` - Displays the challenge text for the given year and day. If no part is given, it'll display both parts.
 
-`aocs submit (year) (day) -p [part]` - Submits the solution for the given year and day with the given part.
+`aocs submit (year) (day) [solution] -p [part]` - Submits the solution for the given year and day with the given part. If no solution is given, it'll use the solution saved in the `config.json` file.
 
 ## Contributing
 

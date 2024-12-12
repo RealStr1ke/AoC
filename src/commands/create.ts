@@ -79,22 +79,24 @@ export default class Create extends Command {
 		// Read the templates
 		const indexTemplate = fs.readFileSync(indexTemplatePath, 'utf-8');
 		const readmeTemplate = fs.readFileSync(readmeTemplatePath, 'utf-8');
-
+		
 		// Retrieve the input if the flag is set
 		let input = '';
 		if (flags.input) {
 			const endpoint = 'https://adventofcode.com';
-			const sessionCookie = fs.readFileSync(path.join(__dirname, '..', '..', 'session.txt'), 'utf-8').trim();
-
+			const configPath = path.join(__dirname, '..', '..', 'config.json');
+			const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+			const sessionCookie = config.session;
+			
 			const response = await axios.get(`${endpoint}/${year}/day/${day}/input`, {
 				headers: {
 					cookie: `session=${sessionCookie}`,
 				},
 			});
-
+			
 			input = response.data;
 		}
-
+		
 		// Write the the files
 		fs.writeFileSync(inputPath, input);
 		fs.writeFileSync(indexPath, indexTemplate);

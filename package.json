@@ -8,11 +8,16 @@
 	"dependencies": {
 		"@oclif/core": "^4.0.36",
 		"axios": "^1.7.9",
+		"chalk": "^5.3.0",
+		"cheerio": "^1.0.0",
 		"colors": "^1.4.0",
 		"command-line-args": "^5.2.1",
 		"dijkstrajs": "^1.0.3",
 		"heap-js": "^2.5.0",
+		"inquirer": "^12.2.0",
 		"mathjs": "^12.4.3",
+		"puppeteer": "^23.10.3",
+		"puppeteer-core": "^23.10.3",
 		"statman-stopwatch": "^2.18.1",
 		"typescript-eslint": "^8.18.0"
 	},
@@ -26,8 +31,8 @@
 		"topicSeparator": ":"
 	},
 	"devDependencies": {
+		"@types/bun": "latest",
 		"@types/node": "^18.19.68",
-		"ts-node": "^10.9.2",
-		"@types/bun": "latest"
+		"ts-node": "^10.9.2"
 	}
 }
