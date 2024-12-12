@@ -77,9 +77,9 @@ export default class Run extends Command {
 
 		// Check if the challenge exists
 		const dir = path.join(__dirname, '..', '..', 'events', year.toString(), 'days', day.toString());
-		const indexPath = path.join(dir, 'index.js');
+		const indexPath = path.join(dir, 'index.ts');
 		if (!fs.existsSync(indexPath)) {
-			this.error('The challenge\'s `index.js` file does not exist. Please create it first.');
+			this.error('The challenge\'s `index.ts` file does not exist. Please create it first.');
 		}
 
 		// Load the config file

@@ -71,9 +71,9 @@ export default class Create extends Command {
 
 		// Paths
 		const inputPath = path.join(dir, 'input.txt');
-		const indexPath = path.join(dir, 'index.js');
+		const indexPath = path.join(dir, 'index.ts');
 		const readmePath = path.join(dir, 'README.md');
-		const indexTemplatePath = path.join(__dirname, '..', '..', 'src', 'templates', 'index.js');
+		const indexTemplatePath = path.join(__dirname, '..', '..', 'src', 'templates', 'index.ts');
 		const readmeTemplatePath = path.join(__dirname, '..', '..', 'src', 'templates', 'README.md');
 
 		// Read the templates

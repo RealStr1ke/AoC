@@ -50,15 +50,18 @@ export default class Submit extends Command {
 	private parseResponse(response: string): string {
 		const $ = cheerio.load(response);
 		const text = $('main').text();
+		// const text = 'That\'s the right answer!';
 		let result = '';
-		if (text.includes('That\'s the right answer')) {
+		// console.log(text.includes('right'));
+		if (text.includes('That\'s the right answer!')) {
 			result = chalk.green('This answer is correct!');
-		} if (text.includes('too low')) {
+		} else if (text.includes('too low')) {
 			result = chalk.red('This answer is incorrect (too low).');
 		} else if (text.includes('too high')) {
 			result = chalk.red('This answer is incorrect (too high).');
+		} else if (text.includes('That\'s not the right answer')) {
+			result = chalk.red('This answer is incorrect.');
 		} else if (text.includes('You gave an answer too recently')) {
-			// const regex;
 			const regex = /You have (.+?) left to wait/;
 			const matches = text.match(regex);
 			if (matches) {
@@ -66,6 +69,8 @@ export default class Submit extends Command {
 			} else {
 				result = chalk.yellow('You have to wait before you can submit another answer.');
 			}
+		} else if (text.includes('You don\'t seem to be solving the right level')) {
+			result = chalk.yellow('You have already solved this challenge.');
 		} else {
 			this.log(text);
 			this.error(chalk.red('An error occurred while submitting the answer.'));
@@ -106,6 +111,9 @@ export default class Submit extends Command {
 			const configPath = path.join(__dirname, '..', '..', 'config.json');
 			const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 			solution = config.results[year]?.[day]?.[`part${part}`];
+			if (!solution) {
+				this.error('No solution found in the config file. Please provide a solution.');
+			}
 		}
 
 		// Get the session cookie
