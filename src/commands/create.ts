@@ -3,11 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import chalk from 'chalk';
+// @ts-expect-error - I'm assuming cli-spinner isn't ESM compatible or whatever
 import { Spinner } from 'cli-spinner';
-import { write } from 'console';
 
 export default class Create extends Command {
-	static summary = 'Setup a new challenge folder';
+	static summary = 'Setup a new challenge folder.';
 	static description = 'Creates a new folder for the given year and day with the template `index.js` solution file, `input.txt` file, and `README.md` file with the challenge description.';
 	static hidden = false;
 	static usage = 'aocs create (year) (day) [--input]';
@@ -22,7 +22,7 @@ export default class Create extends Command {
 		},
 	];
 	static strict = false;
-	static aliases = [
+	static hiddenAliases = [
 		'c',
 		'cr',
 		'new',

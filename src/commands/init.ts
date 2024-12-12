@@ -20,7 +20,7 @@ export default class Init extends Command {
 		},
 	];
 	static strict = false;
-	static aliases = [];
+	static hiddenAliases = [];
 	static enableJsonFlag: false;
 
 	static args = {

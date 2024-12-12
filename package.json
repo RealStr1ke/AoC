@@ -7,6 +7,11 @@
 	},
 	"dependencies": {
 		"@oclif/core": "^4.0.36",
+		"@oclif/plugin-autocomplete": "^3.2.13",
+		"@oclif/plugin-commands": "^4.1.13",
+		"@oclif/plugin-help": "^6.2.19",
+		"@oclif/plugin-not-found": "^3.2.30",
+		"@oclif/plugin-search": "^1.2.17",
 		"axios": "^1.7.9",
 		"chalk": "^5.3.0",
 		"cheerio": "^1.0.0",
@@ -27,7 +32,14 @@
 		"bin": "aocs",
 		"commands": "./src/commands",
 		"dirname": "AoC",
-		"topicSeparator": ":"
+		"topicSeparator": ":",
+		"plugins": [
+			"@oclif/plugin-help",
+			"@oclif/plugin-not-found",
+			"@oclif/plugin-search",
+			"@oclif/plugin-autocomplete",
+			"@oclif/plugin-commands"
+		]
 	},
 	"devDependencies": {
 		"@types/bun": "latest",

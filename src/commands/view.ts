@@ -21,7 +21,7 @@ export default class View extends Command {
 		},
 	];
 	static strict = false;
-	static aliases = [
+	static hiddenAliases = [
 		'v',
 		'c',
 		'challenge',

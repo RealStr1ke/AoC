@@ -2,11 +2,12 @@ import { Args, Command, Flags } from '@oclif/core';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+// @ts-expect-error - I'm assuming cli-spinner isn't ESM compatible or whatever
 import { Spinner } from 'cli-spinner';
 import axios from 'axios';
 
 export default class Input extends Command {
-	static summary = 'Gets the input for a challenge';
+	static summary = 'Gets the input for a challenge.';
 	static description = 'Displays the correct input for the given year and day. If `--save` is provided, it\'ll save the input to the `input.txt` file in the day\'s folder.';
 	static hidden = false;
 	static usage = 'aocs input (year) (day) [--save]';
@@ -21,7 +22,7 @@ export default class Input extends Command {
 		},
 	];
 	static strict = false;
-	static aliases = [
+	static hiddenAliases = [
 		'i',
 		'in',
 	];

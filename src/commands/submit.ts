@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import * as cheerio from 'cheerio';
 
 export default class Submit extends Command {
-	static summary = 'Submits the solution for the given challenge';
+	static summary = 'Submits the result of a solution for the given challenge.';
 	static description = 'Submits the solution for the given year and day with the given part. If no solution is given, it\'ll use the solution saved in the `config.json` file.';
 	static hidden = false;
 	static usage = 'aocs submit (year) (day) [solution] -p [part]';
@@ -22,7 +22,7 @@ export default class Submit extends Command {
 
 	];
 	static strict = false;
-	static aliases = [
+	static hiddenAliases = [
 		's',
 	];
 	static enableJsonFlag: false;

@@ -3,11 +3,12 @@ import fs from 'fs';
 import path from 'path';
 // @ts-expect-error - I'm assuming statman-stopwatch isn't ESM compatible or whatever
 import Stopwatch from 'statman-stopwatch';
+// @ts-expect-error - I'm assuming cli-spinner isn't ESM compatible or whatever
 import { Spinner } from 'cli-spinner';
 import chalk from 'chalk';
 
 export default class Run extends Command {
-	static summary = 'Runs the solution for the given challenge';
+	static summary = 'Runs the solution for the given challenge.';
 	static description = 'Runs the solution for the given year and day with the given part. This will save the result to the `config.json` file for later use. If no part is given, it runs both parts.';
 	static hidden = false;
 	static usage = 'aocs run (year) (day) -p [part]';
@@ -22,7 +23,7 @@ export default class Run extends Command {
 		},
 	];
 	static strict = false;
-	static aliases = [
+	static hiddenAliases = [
 		'r',
 	];
 	static enableJsonFlag: false;
