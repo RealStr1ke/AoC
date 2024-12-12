@@ -108,7 +108,7 @@ export default class View extends Command {
 		const titleText = `--- Day ${day}: ${title} ---`;
 
 		// Display the challenge text
-		this.log(titleText);
+		if (flags.part) this.log(titleText);
 		if (flags.part === '1' || flags.part === 'both') {
 			this.log('\n--- Part One ---\n');
 			this.log(part1.trim().replace(titleText, ''));
