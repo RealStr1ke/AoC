@@ -204,10 +204,21 @@ export const e = Math.E;
 /**
  * Creates an array from a string input, splitting on newlines
  * @param input String with newlines
+ * @param delimiter Delimiter to split on, default is newline (\n)
  * @returns Array of strings
  */
-export function createArray(input: string): string[] {
-	return input.trim().split('\n');
+export function createArray(input: string, delimiter: string = '\n'): string[] {
+	return input.trim().split(delimiter);
+}
+
+/**
+ * Creates an array of numbers from a string input, splitting on newlines
+ * @param input String with newlines
+ * @param delimiter Delimiter to split on, default is newline (\n)
+ * @returns Array of numbers
+ */
+export function createNumberArray(input: string, delimiter: string = '\n'): number[] {
+	return input.trim().split(delimiter).map(Number);
 }
 
 /**

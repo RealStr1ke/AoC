@@ -2,6 +2,7 @@ import { Args, Command, Flags } from '@oclif/core';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
+import chalk from 'chalk';
 import * as cheerio from 'cheerio';
 
 export default class View extends Command {
@@ -97,7 +98,7 @@ export default class View extends Command {
 		let part2Access = true;
 
 		if (!part2 && flags.part === '2') {
-			this.error('You don\'t have the second part of the challenge yet.');
+			this.error('You don\'t have access to the second part of the challenge yet.');
 		} else if (!part2 && flags.part === 'both') {
 			part2Access = false;
 		}
@@ -111,14 +112,14 @@ export default class View extends Command {
 		if (flags.part) this.log(titleText);
 		if (flags.part === '1' || flags.part === 'both') {
 			this.log('\n--- Part One ---\n');
-			this.log(part1.trim().replace(titleText, ''));
+			this.log(chalk.gray(part1.trim().replace(titleText, '')));
 		}
 		if (flags.part === '2' || flags.part === 'both') {
 			this.log('\n--- Part Two ---\n');
 			if (part2Access) {
-				this.log(part2.trim());
+				this.log(chalk.gray(part2.trim()));
 			} else {
-				this.log('You don\'t have the second part of the challenge yet.');
+				this.log(chalk.yellow('You don\'t have access to the second part of the challenge yet.'));
 			}
 		}
 	}

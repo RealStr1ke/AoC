@@ -2,6 +2,9 @@ import { Args, Command, Flags } from '@oclif/core';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
+import chalk from 'chalk';
+import { Spinner } from 'cli-spinner';
+import { write } from 'console';
 
 export default class Create extends Command {
 	static summary = 'Setup a new challenge folder';
@@ -41,6 +44,10 @@ export default class Create extends Command {
 			char: 'i',
 			description: 'Whether or not to retrieve the input',
 		}),
+		force: Flags.boolean({
+			char: 'f',
+			description: 'Whether or not to overwrite the existing files',
+		}),
 	};
 
 	public async run(): Promise<void> {
@@ -50,18 +57,40 @@ export default class Create extends Command {
 		const day = args.day ?? new Date().getDate();
 		const explicit = args.day ?? false;
 
+		// Set default spinner text
+		Spinner.setDefaultSpinnerString(18);
+
+		// Start spinner for validating input
+		const validatingSpinner = new Spinner({
+			text: chalk.gray('Validating command input... %s'),
+			stream: process.stderr,
+			onTick: function(msg: string) {
+				this.clearLine(this.stream);
+				this.stream.write(msg);
+			},
+		});
+		validatingSpinner.start();
+
 		// Validate the input
 		if (!explicit && new Date().getMonth() !== 11) {
+			validatingSpinner.stop(false);
+			this.log('\n');
 			this.error('You must specify the year and day explicitly if it is not December.');
 		}
 
 		// Validate the year and day
 		if (year < 2015 || year > new Date().getFullYear()) {
+			validatingSpinner.stop(false);
+			this.log('\n');
 			this.error('Year must be between 2015 and the current year. Your input: ' + year);
 		}
 		if (day > 25 || day < 1) {
+			validatingSpinner.stop(false);
+			this.log('\n');
 			this.error('Day must be between 1 and 25. Your input: ' + day);
 		}
+		validatingSpinner.stop(false);
+		this.log(chalk.green('\nSuccessfully validated the command input.'));
 
 		// Create the directory if it doesn't exist
 		const dir = path.join(__dirname, '..', '..', 'events', year.toString(), 'days', day.toString());
@@ -83,23 +112,147 @@ export default class Create extends Command {
 		// Retrieve the input if the flag is set
 		let input = '';
 		if (flags.input) {
+			const inputSpinner = new Spinner({
+				text: chalk.gray('Retrieving input... %s'),
+				stream: process.stderr,
+				onTick: function(msg: string) {
+					this.clearLine(this.stream);
+					this.stream.write(msg);
+				},
+			});
+			inputSpinner.start();
+
 			const endpoint = 'https://adventofcode.com';
 			const configPath = path.join(__dirname, '..', '..', 'config.json');
 			const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 			const sessionCookie = config.session;
 
-			const response = await axios.get(`${endpoint}/${year}/day/${day}/input`, {
+			await axios.get(`${endpoint}/${year}/day/${day}/input`, {
 				headers: {
 					cookie: `session=${sessionCookie}`,
 				},
+			}).then((res) => {
+				if (res) {
+					input = res.data;
+					inputSpinner.stop(false);
+					this.log(chalk.green('\nSuccessfully retrieved the input.'));
+				} else {
+					inputSpinner.stop(false);
+					this.log('\n');
+					this.log(chalk.red('Failed to retrieve the input. Please check your session cookie.'));
+					input = '';
+				}
+			}).catch((error) => {
+				inputSpinner.stop(false);
+				this.log('\n');
+				this.log(chalk.red('Failed to retrieve the input. Please check your session cookie. \n Error: ') + error);
+				input = '';
 			});
-
-			input = response.data;
 		}
 
 		// Write the the files
-		fs.writeFileSync(inputPath, input);
-		fs.writeFileSync(indexPath, indexTemplate);
-		fs.writeFileSync(readmePath, readmeTemplate);
+		const writeInputSpinner = new Spinner({
+			text: chalk.gray('Writing input file... %s'),
+			stream: process.stderr,
+			onTick: function(msg: string) {
+				this.clearLine(this.stream);
+				this.stream.write(msg);
+			},
+		});
+		writeInputSpinner.start();
+		if (fs.existsSync(inputPath)) {
+			if (flags.force) {
+				try {
+					fs.writeFileSync(inputPath, input);
+					writeInputSpinner.stop(false);
+					this.log(chalk.green('\nSuccessfully wrote the input file.'));
+				} catch (error) {
+					writeInputSpinner.stop(false);
+					this.log(chalk.red('\nFailed to write the input file. \n Error: ') + error);
+				}
+			} else {
+				writeInputSpinner.stop(false);
+				this.log(chalk.yellow('\nInput file already exists. Use the --force flag to overwrite it.'));
+			}
+		} else {
+			try {
+				fs.writeFileSync(inputPath, input);
+				writeInputSpinner.stop(false);
+				this.log(chalk.green('\nSuccessfully wrote the input file.'));
+			} catch (error) {
+				writeInputSpinner.stop(false);
+				this.log(chalk.red('\nFailed to write the input file. \n Error: ') + error);
+			}
+		}
+
+		const writeIndexSpinner = new Spinner({
+			text: chalk.gray('Writing index file... %s'),
+			stream: process.stderr,
+			onTick: function(msg: string) {
+				this.clearLine(this.stream);
+				this.stream.write(msg);
+			},
+		});
+		writeIndexSpinner.start();
+		if (fs.existsSync(indexPath)) {
+			if (flags.force) {
+				try {
+					fs.writeFileSync(indexPath, indexTemplate);
+					writeIndexSpinner.stop(false);
+					this.log(chalk.green('\nSuccessfully wrote the index file.'));
+				} catch (error) {
+					writeIndexSpinner.stop(false);
+					this.log(chalk.red('\nFailed to write the index file. \n Error: ') + error);
+				}
+			} else {
+				writeIndexSpinner.stop(false);
+				this.log(chalk.yellow('\nIndex file already exists. Use the --force flag to overwrite it.'));
+			}
+		} else {
+			try {
+				fs.writeFileSync(indexPath, indexTemplate);
+				writeIndexSpinner.stop(false);
+				this.log(chalk.green('\nSuccessfully wrote the index file.'));
+			} catch (error) {
+				writeIndexSpinner.stop(false);
+				this.log(chalk.red('\nFailed to write the index file. \n Error: ') + error);
+			}
+		}
+
+		const writeReadmeSpinner = new Spinner({
+			text: chalk.gray('Writing README file... %s'),
+			stream: process.stderr,
+			onTick: function(msg: string) {
+				this.clearLine(this.stream);
+				this.stream.write(msg);
+			},
+		});
+		writeReadmeSpinner.start();
+		if (fs.existsSync(readmePath)) {
+			if (flags.force) {
+				try {
+					fs.writeFileSync(readmePath, readmeTemplate);
+					writeReadmeSpinner.stop(false);
+					this.log(chalk.green('\nSuccessfully wrote the README file.'));
+				} catch (error) {
+					writeReadmeSpinner.stop(false);
+					this.log(chalk.red('\nFailed to write the README file. \n Error: ') + error);
+				}
+			} else {
+				writeReadmeSpinner.stop(false);
+				this.log(chalk.yellow('\nREADME file already exists. Use the --force flag to overwrite it.'));
+			}
+		} else {
+			try {
+				fs.writeFileSync(readmePath, readmeTemplate);
+				writeReadmeSpinner.stop(false);
+				this.log(chalk.green('\nSuccessfully wrote the README file.'));
+			} catch (error) {
+				writeReadmeSpinner.stop(false);
+				this.log(chalk.red('\nFailed to write the README file. \n Error: ') + error);
+			}
+		}
+
+		this.log(chalk.green('Challenge setup complete!'));
 	}
 }

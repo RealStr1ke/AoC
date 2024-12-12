@@ -1,6 +1,7 @@
 import { Args, Command } from '@oclif/core';
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
 import inquirer from 'inquirer';
 
 export default class Init extends Command {
@@ -40,7 +41,7 @@ export default class Init extends Command {
 				{
 					type: 'input',
 					name: 'session',
-					message: 'Enter your Advent of Code session cookie:',
+					message: chalk.blue('Enter your Advent of Code session cookie:'),
 				},
 			]);
 			session = prompt.session;
@@ -48,14 +49,25 @@ export default class Init extends Command {
 
 		const configPath = path.join(__dirname, '..', '..', 'config.json');
 		if (!fs.existsSync(configPath)) {
-			fs.writeFileSync(configPath, JSON.stringify({ session }, null, 4));
+			try {
+				fs.writeFileSync(configPath, JSON.stringify({ session }, null, 4));
+			} catch (error) {
+				this.error(chalk.red('Failed to save session cookie to `config.json` \n Error: ') + error);
+			}
 		} else {
-			const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-			config.session = session;
-
-			fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
+			try {
+				const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+				config.session = session;
+				try {
+					fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
+				} catch (error) {
+					this.error(chalk.red('Failed to save session cookie to `config.json` \n Error: ') + error);
+				}
+			} catch (error) {
+				this.error(chalk.red('Failed to save session cookie to `config.json` \n Error: ') + error);
+			}
 		}
-		this.log('Session cookie saved to `config.json`');
+		this.log(chalk.green('Session cookie saved to `config.json`'));
 
 		return;
 	}

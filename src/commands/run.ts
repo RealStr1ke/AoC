@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 // @ts-expect-error - I'm assuming statman-stopwatch isn't ESM compatible or whatever
 import Stopwatch from 'statman-stopwatch';
+import { Spinner } from 'cli-spinner';
+import chalk from 'chalk';
 
 export default class Run extends Command {
 	static summary = 'Runs the solution for the given challenge';
@@ -57,6 +59,20 @@ export default class Run extends Command {
 		const day = args.day ?? new Date().getDate();
 		const explicit = args.day ?? false;
 
+		// Set default spinner text
+		Spinner.setDefaultSpinnerString(18);
+
+		// Start spinner for validating input
+		const validatingSpinner = new Spinner({
+			text: chalk.gray('Validating command input... %s'),
+			stream: process.stderr,
+			onTick: function(msg: string) {
+				this.clearLine(this.stream);
+				this.stream.write(msg);
+			},
+		});
+		validatingSpinner.start();
+
 		// Validate the input
 		if (!explicit && new Date().getMonth() !== 11) {
 			this.error('You must specify the year and day explicitly if it is not December.');
@@ -75,6 +91,10 @@ export default class Run extends Command {
 			this.error('Part must be either `1`, `2`, or `both`. Your input: ' + flags.part);
 		}
 
+		// Stop the validating spinner
+		validatingSpinner.stop(false);
+		this.log(chalk.green('\nSuccessfully validated the command input.'));
+
 		// Check if the challenge exists
 		const dir = path.join(__dirname, '..', '..', 'events', year.toString(), 'days', day.toString());
 		const indexPath = path.join(dir, 'index.ts');
@@ -92,20 +112,41 @@ export default class Run extends Command {
 		// Run the solution
 		const solution = await import(indexPath);
 		if (flags.part === '1' || flags.part === 'both') {
+			// Start the spinner for part 1
+			const part1Spinner = new Spinner({
+				text: chalk.gray('Running part 1... %s'),
+				stream: process.stderr,
+				onTick: function(msg: string) {
+					this.clearLine(this.stream);
+					this.stream.write(msg);
+				},
+			});
+			part1Spinner.start();
 			const { result, time } = this.runPart(solution, 1);
-			this.log(`Part 1: ${result} (in ${time} ms)`);
+			part1Spinner.stop(false);
+			this.log(`\n${chalk.green.bold('Part 1:')} ${chalk.yellow(result)} ${chalk.gray.italic(`(in ${chalk.white(`${time} ms`)})`)}`);
 			config.results[year][day].part1 = result;
 		}
-
 		if (flags.part === '2' || flags.part === 'both') {
+			// Start the spinner for part 2
+			const part2Spinner = new Spinner({
+				text: chalk.gray('Running part 2... %s'),
+				stream: process.stderr,
+				onTick: function(msg: string) {
+					this.clearLine(this.stream);
+					this.stream.write(msg);
+				},
+			});
+			part2Spinner.start();
 			const { result, time } = this.runPart(solution, 2);
-			this.log(`Part 2: ${result} (in ${time} ms)`);
+			part2Spinner.stop(false);
+			this.log(`\n${chalk.green.bold('Part 2:')} ${chalk.yellow(result)} ${chalk.gray.italic(`(in ${chalk.white(`${time} ms`)})`)}`);
 			config.results[year][day].part2 = result;
 		}
 
 		// Save the results
 		fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
-		this.log('Results saved to `config.json`');
+		this.log(chalk.green(`Results saved to ${chalk.yellow('`config.json`')}`));
 
 		return;
 	}
