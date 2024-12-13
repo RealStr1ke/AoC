@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 function part1() {
 	fs.open('input.txt', 'r', (err, fd) => {
@@ -161,7 +161,7 @@ function part2() {
 	});
 }
 
-module.exports = {
-    part1,
-    part2
+export default {
+	part1,
+	part2,
 };

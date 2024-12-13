@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 function isNum(char) {
 	return char.match(/[0-9]/);
@@ -149,9 +149,9 @@ function solveJokers(hand, cardRanks) {
 		frequencyValues[i] = frequencies[i][frequencyKeys[i]];
 	}
 	for (let i = 0; i < frequencyValues.length; i++) {
-		
+
 	}
-	
+
 	console.log(mostFreqCards);
 
 	let jokerReplacement = '';
@@ -359,12 +359,14 @@ function part2() {
 		console.log(hands[4]);
 
 		// Print the result
-		console.log(`Part 1 Result: ${result}`);
-		// if (result != 248747492) console.log("THE RESULT IS WRONG")
+		console.log(`Part 2 Result: ${result}`);
+		if (result != 248747492) console.log('THE RESULT IS WRONG');
 	});
 }
 
-module.exports = {
-    part1,
-    part2
+part2();
+
+export default {
+	part1,
+	part2,
 };

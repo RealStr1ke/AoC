@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 function part1() {
 	fs.open('input.txt', 'r', (err, fd) => {
@@ -207,7 +207,7 @@ function part2() {
 		for (const seedRange of seedRanges) {
 			const [start, range] = seedRange;
 			for (let i = 0; i < range; i++) {
-                if (i % 1000 === 0) console.log(i);
+				if (i % 1000 === 0) console.log(i);
 				const seed = start + i;
 				const seedObj = {};
 				seedObj.seed = seed;
@@ -290,14 +290,14 @@ function part2() {
 				}
 
 				if (seedObj.location < locationLowest) {
-                    locationLowest = seedObj.location;
-                    console.log("New lowest location:", locationLowest);
-                }
-                // console.log(seed)
+					locationLowest = seedObj.location;
+					console.log('New lowest location:', locationLowest);
+				}
+				// console.log(seed)
 			}
 		}
 
-		
+
 		result = locationLowest;
 
 		// Print the result
@@ -305,7 +305,10 @@ function part2() {
 	});
 }
 
-module.exports = {
-    part1,
-    part2
+export default {
+	part1,
+	part2,
 };
+
+// part1();
+part2();

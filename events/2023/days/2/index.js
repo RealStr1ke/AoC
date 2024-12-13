@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 function part1() {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
@@ -45,9 +45,9 @@ function part1() {
 	for (const game of games) {
 		sum += game.game;
 	}
-	
+
 	// Return the sum
-	
+
 }
 
 function part2() {
@@ -56,10 +56,10 @@ function part2() {
 		for (const line of fs.readFileSync(fd, 'utf8').split('\n')) {
 			// Each line looks like this:
 			// "Game 1: 10 blue, 12 red; 8 red; 7 green, 5 red, 7 blue"
-	
+
 			const currentGame = {};
 			currentGame.game = parseInt(line.split(':')[0].split(' ')[1]);
-	
+
 			// Parse each round (separated by ';')
 			const rounds = line.split(':')[1].split(';');
 			for (const round of rounds) {
@@ -72,7 +72,7 @@ function part2() {
 					// console.log(numbers)
 					const colorName = numbers[2];
 					const colorValue = parseInt(numbers[1]);
-	
+
 					// // If the color doesn't exist in the current game, add it
 					if (!currentGame[colorName]) {
 						currentGame[colorName] = colorValue;
@@ -84,28 +84,28 @@ function part2() {
 					}
 				}
 			}
-	
+
 			// Add the current game to the list of games
 			games.push(currentGame);
 		}
-	
+
 		// Find the power of each game (red * green * blue)
 		for (const game of games) {
 			game.power = game.red * game.green * game.blue;
 		}
-	
+
 		// Sum the powers of all the games
 		let sum = 0;
 		for (const game of games) {
 			sum += game.power;
 		}
-	
+
 		// Print the sum
 		console.log(`Part 2 Result: ${sum}`);
 	});
 }
 
-module.exports = {
+export default {
 	part1,
 	part2,
 };

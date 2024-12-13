@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 const math = require('mathjs');
 
 function extrapolate(nums, type) {
@@ -107,7 +107,7 @@ function part2() {
 	return result;
 }
 
-module.exports = {
+export default {
 	part1,
 	part2,
 };

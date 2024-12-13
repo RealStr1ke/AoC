@@ -1,5 +1,4 @@
 import fs from 'fs';
-const { re } = require('mathjs');
 import path from 'path';
 
 function part1() {

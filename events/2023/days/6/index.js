@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 function isNum(char) {
 	return char.match(/[0-9]/);
@@ -13,8 +13,8 @@ function part1() {
 		const lines = fs.readFileSync(fd, 'utf8').split('\n');
 		const times = lines[0].split(' ').map(Number).filter(Boolean);
 		const distances = lines[1].split(' ').map(Number).filter(Boolean);
-		
-		let currentWRs = [];
+
+		const currentWRs = [];
 		for (let i = 0; i < times.length; i++) {
 			currentWRs.push({ time: times[i], distance: distances[i] });
 		}
@@ -28,8 +28,8 @@ function part1() {
 			// Calculate all possible runs
 			const possibleRuns = [];
 			for (let j = 0; j < time; j++) {
-				let posButton = j;
-				let posBoat = posButton * (time - posButton);
+				const posButton = j;
+				const posBoat = posButton * (time - posButton);
 				possibleRuns.push({ time: time, distance: posBoat });
 			}
 
@@ -45,7 +45,7 @@ function part1() {
 			result *= runsThatBeatWR;
 
 		}
-		
+
 		// Print the result
 		console.log(`Part 1 Result: ${result}`);
 	});
@@ -74,7 +74,7 @@ function part2() {
 		// console.log(mainTime, mainDistance)
 
 
-		let currentWRs = [];
+		const currentWRs = [];
 		currentWRs.push({ time: mainTime, distance: mainDistance });
 
 		let runsThatBeatWR = 0;
@@ -87,8 +87,8 @@ function part2() {
 			// Calculate all possible runs
 			const possibleRuns = [];
 			for (let j = 0; j < time; j++) {
-				let posButton = j;
-				let posBoat = posButton * (time - posButton);
+				const posButton = j;
+				const posBoat = posButton * (time - posButton);
 				if (posBoat > distance) {
 					runsThatBeatWR++;
 				}
@@ -103,7 +103,7 @@ function part2() {
 	});
 }
 
-module.exports = {
-    part1,
-    part2
+export default {
+	part1,
+	part2,
 };
