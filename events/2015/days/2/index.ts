@@ -6,7 +6,7 @@ function calculateSurfaceArea(l: number, w: number, h: number): number {
 	return 2 * l * w + 2 * w * h + 2 * h * l;
 }
 function calculateRibbonLength(l: number, w: number, h: number): number {
-	const [a, b, c] = [l, w, h].sort((a, b) => a - b);
+	const [a, b, c] = [l, w, h].sort((d, e) => d - e);
 	return 2 * a + 2 * b + a * b * c;
 }
 

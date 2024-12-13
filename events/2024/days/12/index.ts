@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import * as aoc from '../../../../src/lib/utils.ts';
 
-function findRegions(data: string[][]): { [key: string]: [number, number][][] } {
-	const regions: { [key: string]: [number, number][][] } = {};
+function findRegions(data: string[][]): Record<string, [number, number][][]> {
+	const regions: Record<string, [number, number][][]> = {};
 
 	const checked: number[][] = [];
 	for (let i = 0; i < data.length; i++) {
@@ -70,8 +70,8 @@ function findRegions(data: string[][]): { [key: string]: [number, number][][] } 
 	return regions;
 }
 
-function calculatePerimeter(region: number[][]): Array<[number, number]> {
-	const perimeter: Array<[number, number]> = [];
+function calculatePerimeter(region: number[][]): [number, number][] {
+	const perimeter: [number, number][] = [];
 
 	for (let i = 0; i < region.length; i++) {
 		const row: number = region[i][0];
@@ -138,7 +138,7 @@ function calculateSides(region: [number, number][]): number {
 		}
 	}
 
-	const perimeter: Array<[number, number]> = calculatePerimeter(newRegion);
+	const perimeter: [number, number][] = calculatePerimeter(newRegion);
 	// console.log(perimeter);
 
 
@@ -196,13 +196,13 @@ function calculateSides(region: [number, number][]): number {
 	}
 
 	// Find all the corners
-	const corners: Array<[number, number]> = [];
+	const corners: [number, number][] = [];
 
 	for (let i = 0; i < newGrid.length; i++) {
 		for (let j = 0; j < newGrid[i].length; j++) {
 			if (newGrid[i][j] === '#') {
 				// Make a 3x3 grid around the point
-				const directions: Array<[number, number]> = [
+				const directions: [number, number][] = [
 					[-1, -1],
 					[-1, 0],
 					[-1, 1],
@@ -284,8 +284,8 @@ function part1(): number {
 
 	const data: string[][] = aoc.createGrid(input);
 
-	const regions: { [key: string]: [number, number][][] } = findRegions(data);
-	const perimeters: { [key: string]: number[] } = {};
+	const regions: Record<string, [number, number][][]> = findRegions(data);
+	const perimeters: Record<string, number[]> = {};
 
 	// For each region of each letter, calculate the perimeter
 	for (const letter in regions) {
@@ -320,8 +320,8 @@ function part2(): number {
 
 	const data: string[][] = aoc.createGrid(input);
 
-	const regions: { [key: string]: [number, number][][] } = findRegions(data);
-	const sides: { [key: string]: number[] } = {};
+	const regions: Record<string, [number, number][][]> = findRegions(data);
+	const sides: Record<string, number[]> = {};
 
 	// For each region of each letter, calculate the sides
 	for (const letter in regions) {

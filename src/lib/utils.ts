@@ -397,12 +397,12 @@ export function getRelativeElements<T>(grid: T[][], coord: [number, number], coo
  */
 export function expandGrid<T>(grid: T[][], scale: number = 2): T[][] {
 	const newGrid: T[][] = [];
-	for (let i = 0; i < grid.length; i++) {
+	for (const row of grid) {
 		for (let s = 0; s < scale; s++) {
 			const newRow: T[] = [];
-			for (let j = 0; j < grid[i].length; j++) {
+			for (const cell of row) {
 				for (let t = 0; t < scale; t++) {
-					newRow.push(grid[i][j]);
+					newRow.push(cell);
 				}
 			}
 			newGrid.push(newRow);
