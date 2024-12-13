@@ -375,10 +375,10 @@ export function coordsExist<T>(grid: T[][], row: number, col: number): boolean {
  * @param coords Array of relative coordinates [row, col]
  * @returns Array of elements at the relative coordinates, excluding out of bounds positions
  */
-export function getRelativeElements<T>(grid: T[][], coord: [number, number], coords: number[][]): Array<[number, number]> {
+export function getRelativeElements<T>(grid: T[][], coord: [number, number], coords: number[][]): [number, number][] {
 	const row: number = coord[0];
 	const col: number = coord[1];
-	const elements: Array<[number, number]> = [];
+	const elements: [number, number][] = [];
 	for (const [dRow, dCol] of coords) {
 		const newRow = row + dRow;
 		const newCol = col + dCol;

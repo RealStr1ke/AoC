@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 function calculateArea(digPlan) {
 	const coordPairs = [ [0, 0] ];
@@ -136,10 +136,10 @@ function part2() {
 	return result;
 }
 
-console.log(`Part 1: ${part1()}`);
-console.log(`Part 2: ${part2()}`);
+// console.log(`Part 1: ${part1()}`);
+// console.log(`Part 2: ${part2()}`);
 
-module.exports = {
+export default {
 	part1,
 	part2,
 };
