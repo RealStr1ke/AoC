@@ -98,9 +98,12 @@ export default class Run extends Command {
 
 		// Check if the challenge exists
 		const dir = path.join(__dirname, '..', '..', 'events', year.toString(), 'days', day.toString());
-		const indexPath = path.join(dir, 'index.ts');
+		let indexPath = path.join(dir, 'index.ts');
 		if (!fs.existsSync(indexPath)) {
-			this.error('The challenge\'s `index.ts` file does not exist. Please create it first.');
+			indexPath = path.join(dir, 'index.js');
+			if (!fs.existsSync(indexPath)) {
+				this.error(`The challenge for ${year} Day ${day} does not exist.`);
+			}
 		}
 
 		// Load the config file
@@ -123,10 +126,16 @@ export default class Run extends Command {
 				},
 			});
 			part1Spinner.start();
-			const { result, time } = this.runPart(solution, 1);
-			part1Spinner.stop(false);
-			this.log(`\n${chalk.green.bold('Part 1:')} ${chalk.yellow(result)} ${chalk.gray.italic(`(in ${chalk.white(`${time} ms`)})`)}`);
-			config.results[year][day].part1 = result;
+			try {
+				const { result, time } = this.runPart(solution, 1);
+				part1Spinner.stop(false);
+				this.log(`\n${chalk.green.bold('Part 1:')} ${chalk.yellow(result)} ${chalk.gray.italic(`(in ${chalk.white(`${time} ms`)})`)}`);
+				config.results[year][day].part1 = result;
+			} catch (error) {
+				part1Spinner.stop(false);
+				config.results[year][day].part1 = 'ERROR';
+				this.log(chalk.red('An error occurred while running part 1.\n Error: ' + error));
+			}
 		}
 		if (flags.part === '2' || flags.part === 'both') {
 			// Start the spinner for part 2
@@ -139,10 +148,16 @@ export default class Run extends Command {
 				},
 			});
 			part2Spinner.start();
-			const { result, time } = this.runPart(solution, 2);
-			part2Spinner.stop(false);
-			this.log(`\n${chalk.green.bold('Part 2:')} ${chalk.yellow(result)} ${chalk.gray.italic(`(in ${chalk.white(`${time} ms`)})`)}`);
-			config.results[year][day].part2 = result;
+			try {
+				const { result, time } = this.runPart(solution, 2);
+				part2Spinner.stop(false);
+				this.log(`\n${chalk.green.bold('Part 2:')} ${chalk.yellow(result)} ${chalk.gray.italic(`(in ${chalk.white(`${time} ms`)})`)}`);
+				config.results[year][day].part2 = result;
+			} catch (error) {
+				part2Spinner.stop(false);
+				config.results[year][day].part2 = 'ERROR';
+				this.log(chalk.red('An error occurred while running part 2.\n Error: ' + error));
+			}
 		}
 
 		// Save the results

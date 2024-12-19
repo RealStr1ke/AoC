@@ -34,6 +34,8 @@ You can find my solutions in the [`events`](events) folder. Each yearly event ha
 
 `aocs submit (year) (day) [solution] -p [part]` - Submits the solution for the given year and day with the given part. If no solution is given, it'll use the solution saved in the `config.json` file.
 
+`aocs stats (year)` - Displays the global completion stats for the given year. If no year is given, it'll display the stats for the current year.
+
 ## Contributing
 
 I'll most likely not be accepting pull requests to my solution code other than cleanup or optimization (maybe), but you may contribute to the repository by editing the `README.md` files. If you see a typo, something that could be worded better, or just innacuracies with the explanations, feel free to open a pull request with your changes. I'll review it and merge it if I like it. If you have a suggestion for a different solution to a challenge, you may open an issue and I'll take a look at it, but I won't be making new solution files, I'll probably just be explaning other routes to the solution in the `README.md` file.

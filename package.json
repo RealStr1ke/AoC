@@ -23,7 +23,8 @@
 		"inquirer": "^12.2.0",
 		"mathjs": "^12.4.3",
 		"statman-stopwatch": "^2.18.1",
-		"typescript-eslint": "^8.18.0"
+		"typescript-eslint": "^8.18.0",
+		"z3-solver": "^4.13.3"
 	},
 	"bin": {
 		"aocs": "./bin/run.js"

@@ -87,37 +87,52 @@ export default class View extends Command {
 		});
 
 		text = response.data;
+		// console.log(text); process.exit();
 
 		// Parse the HTML
 		const page = cheerio.load(text);
 
-		// Get the challenge text
-		const challengeText = page('.day-desc').text().trim();
+		const elements: object[] = [];
+		const dayDescElements = page('article.day-desc');
+		let part2Access = dayDescElements.length === 2;
 
-		const [ part1, part2 ] = challengeText.split('--- Part Two ---');
-		let part2Access = true;
-
-		if (!part2 && flags.part === '2') {
-			this.error('You don\'t have access to the second part of the challenge yet.');
-		} else if (!part2 && flags.part === 'both') {
-			part2Access = false;
-		}
+		const processedText: string[] = [];
+		dayDescElements.each((i, elem) => {
+			let rawText = page(elem).html() ?? '';
+			rawText = rawText
+				.replace(/<code>(.*?)<\/code>/g, (_, p1) => chalk.gray.italic(p1))
+				.replace(/<em>(.*?)<\/em>/g, (_, p1) => chalk.italic(p1))
+				.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, (_, p1) => chalk.gray.italic(p1))
+				.replace(/<strong>(.*?)<\/strong>/g, (_, p1) => chalk.yellow.italic(p1))
+				.replace(/<[^>]+>/g, '')
+				.replace(/&gt;/g, '>')
+				.trim();
+			processedText.push(rawText);
+		});
 
 		const regex = /--- Day (\d+): (.+?) ---/;
-		const match = part1.match(regex);
+		const match = processedText[0].match(regex);
 		const title = match ? match[2] : 'Unknown Challenge';
 		const titleText = `--- Day ${day}: ${title} ---`;
 
+		if (!part2Access && flags.part === '2') {
+			this.error('You don\'t have access to the second part of the challenge yet.');
+		}
+
 		// Display the challenge text
-		if (flags.part) this.log(titleText);
+		if (flags.part) this.log(chalk.hex('#00CC00').underline.bold(titleText));
 		if (flags.part === '1' || flags.part === 'both') {
-			this.log('\n--- Part One ---\n');
-			this.log(chalk.gray(part1.trim().replace(titleText, '')));
+			const part1 = processedText[0]
+			this.log(chalk.hex('#FDFD66').underline.italic('\n-- Part One --'));
+			// this.log(chalk.hex('#CCCCCC')(part1.trim().replace(titleText, '')));
+			this.log(chalk.green(part1.trim().replace(titleText, '')));
 		}
 		if (flags.part === '2' || flags.part === 'both') {
-			this.log('\n--- Part Two ---\n');
+			const part2 = processedText[1];
+			this.log(chalk.hex('#FDFD66').underline.italic('\n-- Part Two --'));
 			if (part2Access) {
-				this.log(chalk.gray(part2.trim()));
+				// this.log(chalk.hex('#CCCCCC')(part2.replace('--- Part Two ---', '').trim()));
+				this.log(chalk.green(part2.replace('--- Part Two ---', '').trim()));
 			} else {
 				this.log(chalk.yellow('You don\'t have access to the second part of the challenge yet.'));
 			}
