@@ -92,9 +92,8 @@ export default class View extends Command {
 		// Parse the HTML
 		const page = cheerio.load(text);
 
-		const elements: object[] = [];
 		const dayDescElements = page('article.day-desc');
-		let part2Access = dayDescElements.length === 2;
+		const part2Access = dayDescElements.length === 2;
 
 		const processedText: string[] = [];
 		dayDescElements.each((i, elem) => {
@@ -106,6 +105,7 @@ export default class View extends Command {
 				.replace(/<strong>(.*?)<\/strong>/g, (_, p1) => chalk.yellow.italic(p1))
 				.replace(/<[^>]+>/g, '')
 				.replace(/&gt;/g, '>')
+				.replace(/&lt;/g, '<')
 				.trim();
 			processedText.push(rawText);
 		});
@@ -122,7 +122,7 @@ export default class View extends Command {
 		// Display the challenge text
 		if (flags.part) this.log(chalk.hex('#00CC00').underline.bold(titleText));
 		if (flags.part === '1' || flags.part === 'both') {
-			const part1 = processedText[0]
+			const part1 = processedText[0];
 			this.log(chalk.hex('#FDFD66').underline.italic('\n-- Part One --'));
 			// this.log(chalk.hex('#CCCCCC')(part1.trim().replace(titleText, '')));
 			this.log(chalk.green(part1.trim().replace(titleText, '')));
