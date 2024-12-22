@@ -28,11 +28,15 @@ You can find my solutions in the [`events`](events) folder. Each yearly event ha
 
 `aocs run (year) (day) -p [part]` - Runs the solution for the given year and day with the given part. This will save the result to the `config.json` file for later use. If no part is given, it runs both parts.
 
+`aocs
+
 <!-- `aocs test (year) (day) -p [part]` - Runs the tests for the given year and day with the given part. If no part is given, it runs both parts. -->
 
 `aocs view (year) (day) -p [part]` - Displays the challenge text for the given year and day. If no part is given, it'll display both parts.
 
 `aocs submit (year) (day) [solution] -p [part]` - Submits the solution for the given year and day with the given part. If no solution is given, it'll use the solution saved in the `config.json` file.
+
+`aocs leaderboard (year) (day) [--personal] [--global] [--times] [--private <code>] [--list]` - Displays global points leaderboards, private leaderboards, completion times, and personal stats for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified.
 
 `aocs stats (year)` - Displays the global completion stats for the given year. If no year is given, it'll display the stats for the current year.
 
