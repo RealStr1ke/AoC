@@ -28,8 +28,6 @@ You can find my solutions in the [`events`](events) folder. Each yearly event ha
 
 `aocs run (year) (day) -p [part]` - Runs the solution for the given year and day with the given part. This will save the result to the `config.json` file for later use. If no part is given, it runs both parts.
 
-`aocs
-
 <!-- `aocs test (year) (day) -p [part]` - Runs the tests for the given year and day with the given part. If no part is given, it runs both parts. -->
 
 `aocs view (year) (day) -p [part]` - Displays the challenge text for the given year and day. If no part is given, it'll display both parts.
