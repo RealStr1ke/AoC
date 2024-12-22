@@ -8,7 +8,7 @@ import * as cheerio from 'cheerio';
 
 export default class Leaderboard extends Command {
 	static summary = 'Displays global/private leaderboards and personal stats.';
-	static description = 'Shows global points leaderboards, private leaderboards, completion times, and personal stats for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified.';
+	static description = 'Displays global points leaderboards, private leaderboards, completion times, and personal stats for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified.';
 	static hidden = false;
 	static usage = 'aocs leaderboard (year) (day) [--personal] [--global] [--times] [--private <code>] [--list]';
 	static examples = [
