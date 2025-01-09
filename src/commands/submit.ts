@@ -84,24 +84,27 @@ export default class Submit extends Command {
 		const { args, flags } = await this.parse(Submit);
 		const year = args.year ?? new Date().getFullYear();
 		const day = args.day ?? new Date().getDate();
-		const part = flags.part;
-		const explicit = args.day ?? false;
+		const explicit = {
+			year: args.year !== undefined,
+			day: args.day !== undefined,
+		};
+
+		// Get the available years
+		const eventsHTML = await axios.get('https://adventofcode.com/2024/events');
+		const eventsPage = cheerio.load(eventsHTML.data);
+		const eventYears: number[] = [];
+		eventsPage('.eventlist-event a').each((_, element) => { eventYears.push(parseInt(eventsPage(element).text().replace(/\[|\]/g, ''))); });
 
 		// Validate the input
-		if (!explicit && new Date().getMonth() !== 11) {
-			this.error('You must specify the year and day explicitly if it is not December.');
-		}
-
-		// Validate the year and day
-		if (year < 2015 || year > new Date().getFullYear()) {
-			this.error('Year must be between 2015 and the current year. Your input: ' + year);
-		}
-		if (day > 25 || day < 1) {
+		if ((!explicit.year || !explicit.day) && new Date().getMonth() !== 11) {
+			this.error('You must specify the year and day explicitly since the current month isn\'t December.');
+		} else if (!eventYears.includes(year)) {
+			this.error('The year you specified is not available. The available years are: ' + eventYears.join(', '));
+		} else if (!explicit.day && new Date().getDate() > 25) {
+			this.error('You must specify the day explicitly since the current day is after the 25th.');
+		} else if (day > 25 || day < 1) {
 			this.error('Day must be between 1 and 25. Your input: ' + day);
-		}
-
-		// Validate the part
-		if (flags.part && flags.part !== '1' && flags.part !== '2') {
+		} else if (flags.part && flags.part !== '1' && flags.part !== '2') {
 			this.error('Part must be either 1 or 2. Your input: ' + flags.part);
 		}
 

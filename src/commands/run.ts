@@ -58,7 +58,10 @@ export default class Run extends Command {
 		const { args, flags } = await this.parse(Run);
 		const year = args.year ?? new Date().getFullYear();
 		const day = args.day ?? new Date().getDate();
-		const explicit = args.day ?? false;
+		const explicit = {
+			year: args.year !== undefined,
+			day: args.day !== undefined,
+		};
 
 		// Set default spinner text
 		Spinner.setDefaultSpinnerString(18);
@@ -75,21 +78,14 @@ export default class Run extends Command {
 		validatingSpinner.start();
 
 		// Validate the input
-		if (!explicit && new Date().getMonth() !== 11) {
-			this.error('You must specify the year and day explicitly if it is not December.');
-		}
-
-		// Validate the year and day
-		if (year < 2015 || year > new Date().getFullYear()) {
-			this.error('Year must be between 2015 and the current year. Your input: ' + year);
-		}
-		if (day > 25 || day < 1) {
+		if ((!explicit.year || !explicit.day) && new Date().getMonth() !== 11) {
+			this.error('You must specify the year and day explicitly since the current month isn\'t December.');
+		} else if (!explicit.day && new Date().getDate() > 25) {
+			this.error('You must specify the day explicitly since the current day is after the 25th.');
+		} else if (day > 25 || day < 1) {
 			this.error('Day must be between 1 and 25. Your input: ' + day);
-		}
-
-		// Validate the part
-		if (flags.part !== '1' && flags.part !== '2' && flags.part !== 'both') {
-			this.error('Part must be either `1`, `2`, or `both`. Your input: ' + flags.part);
+		} else if (flags.part && flags.part !== '1' && flags.part !== '2' && flags.part !== 'both') {
+			this.error('Part must be either 1, 2 or both. Your input: ' + flags.part);
 		}
 
 		// Stop the validating spinner
