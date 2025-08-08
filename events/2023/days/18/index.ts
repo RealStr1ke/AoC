@@ -58,7 +58,7 @@ function calculateArea(digPlan: DigInstruction[]): number {
 	let area = shoelace(realCoordPairs);
 	let x = Math.abs(minX), y = Math.abs(minY);
 	let borderLength = 0;
-	
+
 	for (let i = 0; i < realCoordPairs.length; i++) {
 		const nextCoord = coordPairs[i];
 		const nextX = x + nextCoord[0];

@@ -42,7 +42,7 @@ function part2(): number {
 	let result = 0;
 
 	const boxes: Box[] = [];
-	
+
 	for (const hash of data) {
 		const operation = hash.includes('=') ? '=' : '-';
 
