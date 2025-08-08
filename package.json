@@ -19,9 +19,11 @@
 		"colors": "^1.4.0",
 		"command-line-args": "^5.2.1",
 		"dijkstrajs": "^1.0.3",
+		"fs": "^0.0.1-security",
 		"heap-js": "^2.5.0",
 		"inquirer": "^12.2.0",
 		"mathjs": "^12.4.3",
+		"path": "^0.12.7",
 		"statman-stopwatch": "^2.18.1",
 		"terminal-link": "^3.0.0",
 		"typescript-eslint": "^8.18.0",
@@ -45,7 +47,7 @@
 	},
 	"devDependencies": {
 		"@types/bun": "latest",
-		"@types/node": "^18.19.68",
+		"@types/node": "^18.19.121",
 		"ts-node": "^10.9.2"
 	}
 }

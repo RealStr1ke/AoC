@@ -49,7 +49,6 @@ function part1(): number {
 
 	let result: number = 0;
 
-
 	const data: string[] = aoc.createArray(input, '\n\n');
 
 	const locks: string[][][] = [];

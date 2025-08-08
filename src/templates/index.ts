@@ -7,9 +7,8 @@ function part1(): number {
 	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	// eslint-disable-next-line prefer-const -- This error occurs in the template, but not when the solution is completed.
 	let result: number = 0;
-
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- This error occurs in the template, but not when the solution is completed.
-	const data: string[] = aoc.createArray(input);
+	const data: string[] = aoc.createArray(input, '\n');
 
 	// Solution logic here
 
@@ -20,9 +19,8 @@ function part2(): number {
 	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	// eslint-disable-next-line prefer-const -- This error occurs in the template, but not when the solution is completed.
 	let result: number = 0;
-
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars -- This error occurs in the template, but not when the solution is completed.
-	const data: string[] = aoc.createArray(input);
+	const data: string[] = aoc.createArray(input, '\n');
 
 	// Solution logic here
 
