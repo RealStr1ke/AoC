@@ -7,7 +7,7 @@ import terminalLink from 'terminal-link';
 import * as cheerio from 'cheerio';
 
 export default class Leaderboard extends Command {
-	static summary = 'Displays global/private leaderboards and personal stats.';
+	static summary = 'Displays global/private leaderboards.';
 	static description = 'Displays global and private points/daily leaderboards for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified.';
 	static hidden = false;
 	static usage = 'aocs leaderboard (year) (day) [--global] [--private <code>] [--list]';

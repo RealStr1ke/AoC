@@ -92,7 +92,7 @@ export default class Input extends Command {
 			},
 		}).then((res) => {
 			if (res) {
-				input = res.data;
+				input = res.data.trim();
 				if (flags.save) inputSpinner.stop(false);
 				if (flags.save) this.log(chalk.green('\nSuccessfully retrieved the input.'));
 			} else {

@@ -133,7 +133,7 @@ export default class Create extends Command {
 				},
 			}).then((res) => {
 				if (res) {
-					input = res.data;
+					input = res.data.trim();
 					inputSpinner.stop(false);
 					this.log(chalk.green('\nSuccessfully retrieved the input.'));
 				} else {

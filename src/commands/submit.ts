@@ -84,9 +84,11 @@ export default class Submit extends Command {
 		const { args, flags } = await this.parse(Submit);
 		const year = args.year ?? new Date().getFullYear();
 		const day = args.day ?? new Date().getDate();
+		const part = flags.part ?? '1';
 		const explicit = {
 			year: args.year !== undefined,
 			day: args.day !== undefined,
+			part: flags.part !== undefined,
 		};
 
 		// Get the available years
