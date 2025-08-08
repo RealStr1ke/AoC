@@ -1,11 +1,22 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-function getASCII(char) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+interface Lens {
+	label: string;
+	number: number;
+}
+
+type Box = Lens[];
+
+function getASCII(char: string): number {
 	return char.charCodeAt(0);
 }
 
-function parseHASH(hash) {
+function parseHASH(hash: string): number {
 	let value = 0;
 	for (const char of hash.split('')) {
 		value += getASCII(char);
@@ -15,7 +26,7 @@ function parseHASH(hash) {
 	return value;
 }
 
-function part1() {
+function part1(): number {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	let result = 0;
 
@@ -26,20 +37,19 @@ function part1() {
 	return result;
 }
 
-function part2() {
+function part2(): number {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').split(',');
 	let result = 0;
 
-	const boxes = []; // [ [ { label: String , number: Number }, ... ], ...  ]
+	const boxes: Box[] = [];
+	
 	for (const hash of data) {
 		const operation = hash.includes('=') ? '=' : '-';
-		// console.log(`${hash} has operation ${operation}`);
 
 		if (operation === '=') {
-			const [label, number] = hash.split('=');
+			const [label, numberStr] = hash.split('=');
+			const number = Number(numberStr);
 			const boxIndex = parseHASH(label);
-			console.log(boxIndex, operation);
-
 
 			// If the box doesn't exist, create it and fill the blank boxes with empty arrays
 			if (!boxes[boxIndex]) {
@@ -61,60 +71,48 @@ function part2() {
 			}
 
 			if (!exists) {
-				// Put it at the beginning
+				// Put it at the end
 				boxes[boxIndex].push({ label, number });
 			}
 
-
 		} else if (operation === '-') {
-			const [label, number] = hash.split('-');
+			const [label] = hash.split('-');
 			const boxIndex = parseHASH(label);
-
-			console.log(boxIndex, operation);
 
 			if (!boxes[boxIndex]) {
 				continue;
 			}
 
-			let exists = false;
 			for (let i = 0; i < boxes[boxIndex].length; i++) {
 				const lens = boxes[boxIndex][i];
 				// If it exists, remove it
 				if (lens.label === label) {
-					console.log(`Removing ${label} from box ${boxIndex}`);
 					boxes[boxIndex].splice(i, 1);
-					exists = true;
 					break;
 				}
 			}
-
-		} else {
-			console.log(`Unknown operation ${operation} in ${hash}`);
-			console.log('How tf did you get here?');
-			process.exit(1);
 		}
-
 	}
 
 	for (let i = 0; i < boxes.length; i++) {
-		let boxesString = '';
-		for (const box of boxes[i]) {
-			boxesString += `[${box.label} ${box.number}] `;
-		}
-		console.log(`Box ${i}: ${boxesString}`);
-	}
-
-	for (let i = 0; i < boxes.length; i++) {
-		for (let j = 0; j < boxes[i].length; j++) {
-			result += (i + 1) * (j + 1) * boxes[i][j].number;
+		if (boxes[i]) {
+			for (let j = 0; j < boxes[i].length; j++) {
+				result += (i + 1) * (j + 1) * boxes[i][j].number;
+			}
 		}
 	}
-
 
 	return result;
 }
 
-export default {
+interface Solution {
+	part1: () => number;
+	part2: () => number;
+}
+
+const solution: Solution = {
 	part1,
 	part2,
 };
+
+export default solution;

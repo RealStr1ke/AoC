@@ -1,8 +1,16 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-function slide(platform, cardinal) {
-	let newPlatform = platform;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+type Platform = string[][];
+type Cardinal = 'north' | 'south' | 'east' | 'west';
+
+function slide(platform: Platform, cardinal: Cardinal): Platform {
+	let newPlatform = platform.map(row => [...row]);
+	
 	if (cardinal === 'north') {
 		// Flip newPlatform on its side so columns become rows
 		newPlatform = newPlatform[0].map((col, i) => newPlatform.map(row => row[i]));
@@ -13,11 +21,10 @@ function slide(platform, cardinal) {
 					let k = j;
 
 					if (k === 0) {
-						// console.log(`Line ${i}`);
 						continue;
 					} else {
 						while (k > 0) {
-							// Corrected condition: check if the previous cell is not "O" and not "#"
+							// Check if the previous cell is not "O" and not "#"
 							if (newPlatform[i][k - 1] !== 'O' && newPlatform[i][k - 1] !== '#') {
 								newPlatform[i][k - 1] = 'O';
 								newPlatform[i][k] = '.';
@@ -27,8 +34,6 @@ function slide(platform, cardinal) {
 							}
 						}
 					}
-				} else {
-					continue;
 				}
 			}
 		}
@@ -48,7 +53,7 @@ function slide(platform, cardinal) {
 						continue;
 					} else {
 						while (k < newPlatform[i].length - 1) {
-							// Corrected condition: check if the next cell is not "O" and not "#"
+							// Check if the next cell is not "O" and not "#"
 							if (newPlatform[i][k + 1] !== 'O' && newPlatform[i][k + 1] !== '#') {
 								newPlatform[i][k + 1] = 'O';
 								newPlatform[i][k] = '.';
@@ -58,8 +63,6 @@ function slide(platform, cardinal) {
 							}
 						}
 					}
-				} else {
-					continue;
 				}
 			}
 		}
@@ -68,7 +71,7 @@ function slide(platform, cardinal) {
 		newPlatform = newPlatform[0].map((col, i) => newPlatform.map(row => row[i]));
 	} else if (cardinal === 'east') {
 		// Reverse each line
-		newPlatform = newPlatform.map(line => line.reverse());
+		newPlatform = newPlatform.map(line => [...line].reverse());
 
 		for (let i = 0; i < newPlatform.length; i++) {
 			for (let j = 0; j < newPlatform[i].length; j++) {
@@ -80,7 +83,7 @@ function slide(platform, cardinal) {
 						continue;
 					} else {
 						while (k > 0) {
-							// Corrected condition: check if the previous cell is not "O" and not "#"
+							// Check if the previous cell is not "O" and not "#"
 							if (newPlatform[i][k - 1] !== 'O' && newPlatform[i][k - 1] !== '#') {
 								newPlatform[i][k - 1] = 'O';
 								newPlatform[i][k] = '.';
@@ -90,14 +93,12 @@ function slide(platform, cardinal) {
 							}
 						}
 					}
-				} else {
-					continue;
 				}
 			}
 		}
 
 		// Reverse each line back to normal
-		newPlatform = newPlatform.map(line => line.reverse());
+		newPlatform = newPlatform.map(line => [...line].reverse());
 	} else if (cardinal === 'west') {
 		for (let i = 0; i < newPlatform.length; i++) {
 			for (let j = 0; j < newPlatform[i].length; j++) {
@@ -106,11 +107,10 @@ function slide(platform, cardinal) {
 					let k = j;
 
 					if (k === 0) {
-						// console.log(`Line ${i}`);
 						continue;
 					} else {
 						while (k > 0) {
-							// Corrected condition: check if the previous cell is not "O" and not "#"
+							// Check if the previous cell is not "O" and not "#"
 							if (newPlatform[i][k - 1] !== 'O' && newPlatform[i][k - 1] !== '#') {
 								newPlatform[i][k - 1] = 'O';
 								newPlatform[i][k] = '.';
@@ -120,65 +120,44 @@ function slide(platform, cardinal) {
 							}
 						}
 					}
-				} else {
-					continue;
 				}
 			}
 		}
 	}
 
-	// for (const line of newPlatform) {
-	// 	console.log(line.join(''));
-	// }
-
 	return newPlatform;
 }
 
-function cycle(platform) {
+function cycle(platform: Platform): Platform {
 	// A cycle is a slide to the north, then to the west, then to the south, then to the east
 	let newPlatform = platform;
 
 	newPlatform = slide(newPlatform, 'north');
-	// console.log("North");
-	// for (const line of newPlatform) {
-	// 	console.log(line.join(''));
-	// }
-
 	newPlatform = slide(newPlatform, 'west');
-	// console.log("West");
-	// for (const line of newPlatform) {
-	// 	console.log(line.join(''));
-	// }
-
 	newPlatform = slide(newPlatform, 'south');
-	// console.log("South");
-	// for (const line of newPlatform) {
-	// 	console.log(line.join(''));
-	// }
-
 	newPlatform = slide(newPlatform, 'east');
-	// console.log("East");
-	// for (const line of newPlatform) {
-	// 	console.log(line.join(''));
-	// }
-
 
 	return newPlatform;
 }
 
+function platformsMatch(platform1: Platform, platform2: Platform): boolean {
+	for (let i = 0; i < platform1.length; i++) {
+		for (let j = 0; j < platform1[i].length; j++) {
+			if (platform1[i][j] !== platform2[i][j]) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
 
-function part1() {
+function part1(): number {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	let result = 0;
 
 	let platform = data.split('\n').map(line => line.split(''));
 	platform = slide(platform, 'north');
 
-
-	// for (const line of platform) {
-	//     console.log(line.join(""));
-	// }
-
 	for (let i = 0; i < platform.length; i++) {
 		// Get the amount of "O" in the line
 		const line = platform[i];
@@ -191,75 +170,57 @@ function part1() {
 	return result;
 }
 
-function part2() {
+function part2(): number {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	let result = 0;
 
-	const original = data.split('\n').map(line => line.split(''));
-	let platform = original;
+	let platform = data.split('\n').map(line => line.split(''));
 
-	// Cycle until the platform loops back to the original platform
+	// Find the cycle pattern
+	const pastPlatforms: Platform[] = [];
 	let cycleCount = 0;
-	const matchesOriginalPlatform = (currentPlatform, originalPlatform) => {
-		for (let i = 0; i < currentPlatform.length; i++) {
-			for (let j = 0; j < currentPlatform[i].length; j++) {
-				if (currentPlatform[i][j] !== originalPlatform[i][j]) {
-					// console.log(`${originalPlatform[i].join("")} !== ${currentPlatform[i].join("")}`)
-					return false;
-				}
-			}
-		}
-		return true;
-	};
+	let cycleStart = -1;
 
-	let pastNum = 0;
-	const matchesPastPlatforms = (currentPlatform, pastPlatforms) => {
+	while (cycleStart === -1) {
+		// Check if current platform matches any past platform
 		for (let i = 0; i < pastPlatforms.length; i++) {
-			const pastPlatform = pastPlatforms[i];
-			if (matchesOriginalPlatform(currentPlatform, pastPlatform)) {
-				pastNum = i;
-				return true;
+			if (platformsMatch(platform, pastPlatforms[i])) {
+				cycleStart = i;
+				break;
 			}
 		}
-		return false;
-	};
 
-	const pastPlatforms = [];
-	while (!matchesPastPlatforms(platform, pastPlatforms) || cycleCount === 0) {
-		pastPlatforms.push(platform);
-		console.log(`Cycle ${cycleCount + 1}`);
-		platform = cycle(platform);
-		cycleCount++;
-	}
-
-	// console.log(`It took ${cycleCount} cycles to get back to the platform ${pastNum}`);
-	pastPlatforms.push(platform);
-
-
-	// Cycle 1000000000 times
-	let loopNum = 0;
-	for (let i = 0; i < 1000000000; i++) {
-		loopNum++;
-	    if (loopNum === platformLoopFull.length) {
-	        loopNum = 0;
+		if (cycleStart === -1) {
+			pastPlatforms.push(platform.map(row => [...row]));
+			platform = cycle(platform);
+			cycleCount++;
 		}
 	}
 
-	platform = platformLoopFull[loopNum + 1];
+	const cycleLength = cycleCount - cycleStart;
+	const remaining = (1000000000 - cycleStart) % cycleLength;
+	const finalPlatform = pastPlatforms[cycleStart + remaining];
 
-	for (let i = 0; i < platform.length; i++) {
+	for (let i = 0; i < finalPlatform.length; i++) {
 		// Get the amount of "O" in the line
-		const line = platform[i];
+		const line = finalPlatform[i];
 		const oCount = line.filter(cell => cell === 'O').length;
 
 		// Add to the result: oCount multiplied by the length of the platform minus the index of the line
-		result += oCount * (platform.length - i);
+		result += oCount * (finalPlatform.length - i);
 	}
 
 	return result;
 }
 
-export default {
+interface Solution {
+	part1: () => number;
+	part2: () => number;
+}
+
+const solution: Solution = {
 	part1,
 	part2,
 };
+
+export default solution;

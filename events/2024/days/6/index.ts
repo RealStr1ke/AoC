@@ -1,43 +1,48 @@
 import fs from 'fs';
 import path from 'path';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as aoc from '../../../../src/lib/utils.ts';
 
-function findGuard(gridMap) {
+type Direction = 'up' | 'right' | 'down' | 'left';
+
+interface Wall {
+	hit: Record<Direction, boolean>;
+	hitIndexes: number[][];
+}
+
+function findGuard(gridMap: string[][]): [number, number] {
 	for (let i = 0; i < gridMap.length; i++) {
 		for (let j = 0; j < gridMap[i].length; j++) {
 			if (gridMap[i][j] === '^') return [i, j];
 		}
 	}
+	return [0, 0]; // fallback
 }
 
-function findPath(gridMap) {
-	const guard = findGuard(gridMap);
-	// console.log(gridMap.join('\n'));
-	const guardPath = [];
+function findPath(gridMap: string[][]): number[][] {
+	const guard: [number, number] = findGuard(gridMap);
+	const guardPath: number[][] = [];
 
-	let pos = guard;
-	let currentDirection = 'up';
+	let pos: [number, number] = guard;
+	let currentDirection: Direction = 'up';
 
 	while (true) {
 		const [i, j] = pos;
-		let di, dj;
+		let di: number, dj: number;
 		switch (currentDirection) {
-		case 'up':
-			[di, dj] = [-1, 0];
-			break;
-		case 'right':
-			[di, dj] = [0, 1];
-			break;
-		case 'down':
-			[di, dj] = [1, 0];
-			break;
-		case 'left':
-			[di, dj] = [0, -1];
-			break;
-
+			case 'up':
+				[di, dj] = [-1, 0];
+				break;
+			case 'right':
+				[di, dj] = [0, 1];
+				break;
+			case 'down':
+				[di, dj] = [1, 0];
+				break;
+			case 'left':
+				[di, dj] = [0, -1];
+				break;
 		}
-
-		// console.log(i + di, j + dj);
-		// console.log(pos)
 
 		// Check if we're out of bounds
 		if (pos[0] < 0 || pos[0] >= gridMap.length || pos[1] < 0 || pos[1] >= gridMap[0].length) {
@@ -75,8 +80,8 @@ function findPath(gridMap) {
 }
 
 // Needs optimization: only check for obstacles on the guard's path instead of checking every possible location
-function findObstuctionsForLoop(gridMap) {
-	const walls = {};
+function findObstuctionsForLoop(gridMap: string[][]): number[][] {
+	const walls: Record<string, Wall> = {};
 	for (let i = 0; i < gridMap.length; i++) {
 		for (let j = 0; j < gridMap[i].length; j++) {
 			if (gridMap[i][j] === '#') {
@@ -93,16 +98,16 @@ function findObstuctionsForLoop(gridMap) {
 		}
 	}
 
-	const obstructions = [];
+	const obstructions: number[][] = [];
 
 	for (let i = 0; i < gridMap.length; i++) {
 		for (let j = 0; j < gridMap[i].length; j++) {
 			if (gridMap[i][j] !== '#' && gridMap[i][j] !== '^') {
 				// Deep copy of gridMap
-				const newGridMap = gridMap.map(row => row.slice());
+				const newGridMap: string[][] = gridMap.map(row => row.slice());
 
 				newGridMap[i][j] = '#';
-				const tempWall = {
+				const tempWall: Wall = {
 					hit: {
 						up: false,
 						right: false,
@@ -112,29 +117,29 @@ function findObstuctionsForLoop(gridMap) {
 					hitIndexes: [],
 				};
 
-				const guard = findGuard(gridMap);
-				const guardPath = [];
+				const guard: [number, number] = findGuard(gridMap);
+				const guardPath: number[][] = [];
 
-				let pos = guard;
-				let currentDirection = 'up';
-				let steps = 0;
+				let pos: [number, number] = guard;
+				let currentDirection: Direction = 'up';
+				let steps: number = 0;
 
 				while (steps < 20000) {
 					const [k, l] = pos;
-					let dk, dl;
+					let dk: number, dl: number;
 					switch (currentDirection) {
-					case 'up':
-						[dk, dl] = [-1, 0];
-						break;
-					case 'right':
-						[dk, dl] = [0, 1];
-						break;
-					case 'down':
-						[dk, dl] = [1, 0];
-						break;
-					case 'left':
-						[dk, dl] = [0, -1];
-						break;
+						case 'up':
+							[dk, dl] = [-1, 0];
+							break;
+						case 'right':
+							[dk, dl] = [0, 1];
+							break;
+						case 'down':
+							[dk, dl] = [1, 0];
+							break;
+						case 'left':
+							[dk, dl] = [0, -1];
+							break;
 					}
 
 					// Check if we're out of bounds
@@ -160,18 +165,18 @@ function findObstuctionsForLoop(gridMap) {
 						}
 
 						switch (currentDirection) {
-						case 'up':
-							currentDirection = 'right';
-							break;
-						case 'right':
-							currentDirection = 'down';
-							break;
-						case 'down':
-							currentDirection = 'left';
-							break;
-						case 'left':
-							currentDirection = 'up';
-							break;
+							case 'up':
+								currentDirection = 'right';
+								break;
+							case 'right':
+								currentDirection = 'down';
+								break;
+							case 'down':
+								currentDirection = 'left';
+								break;
+							case 'left':
+								currentDirection = 'up';
+								break;
 						}
 					} else {
 						pos = [k + dk, l + dl];
@@ -196,45 +201,43 @@ function findObstuctionsForLoop(gridMap) {
 	return obstructions;
 }
 
+function part1(): number {
+	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	let result: number = 0;
 
-function part1() {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
-	let result = 0;
+	const gridMap: string[][] = [];
+	for (const line of input.split('\n')) gridMap.push(line.split(''));
 
-	const gridMap = [];
-	for (const line of data.split('\n')) gridMap.push(line.split(''));
+	const guardPath: number[][] = findPath(gridMap);
 
-	const guardPath = findPath(gridMap);
-
-	const pathMap = gridMap;
+	const pathMap: string[][] = gridMap;
 	for (const [i, j] of guardPath) pathMap[i][j] = 'X';
-	const mapString = pathMap.map(row => row.join('')).join('');
+	const mapString: string = pathMap.map(row => row.join('')).join('');
 
 	for (const char of mapString.split('')) if (char === 'X') result++;
 
-
 	return result;
 }
 
-function part2() {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
-	let result = 0;
+function part2(): number {
+	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	let result: number = 0;
 
-	const gridMap = [];
-	for (const line of data.split('\n')) gridMap.push(line.split(''));
+	const gridMap: string[][] = [];
+	for (const line of input.split('\n')) gridMap.push(line.split(''));
 
-	const guardNewWalls = findObstuctionsForLoop(gridMap);
-	// console.log(guardNewWalls);
+	const guardNewWalls: number[][] = findObstuctionsForLoop(gridMap);
 
 	result = guardNewWalls.length;
-
 	return result;
 }
 
-// console.log(`Part 1: ${part1()}`);
-// console.log(`Part 2: ${part2()}`);
+export interface Solution {
+	part1: () => number;
+	part2: () => number;
+}
 
 export default {
 	part1,
 	part2,
-};
+} as Solution;

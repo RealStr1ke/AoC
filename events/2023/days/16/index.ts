@@ -1,23 +1,48 @@
 import fs from 'fs';
 import path from 'path';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as aoc from '../../../../src/lib/utils.ts';
 
-function getEnergizedTiles(grid, beam) {
-	const originalGrid = grid.map(row => row.map(tile => tile));
-	const energizedTiles = [ { index: beam.index, row: beam.row } ]; // Initialize energizedTiles with the initial beam
-	let currentBeams = [beam]; // Initialize currentBeams with the initial beam
-	const visitedTiles = []; // Initialize visitedTiles that'll contain all the tiles that have been visited alongside the direction they were visited from
+type Direction = 'right' | 'down' | 'left' | 'up';
+
+interface Beam {
+	index: number;
+	row: number;
+	direction: Direction;
+}
+
+interface Tile {
+	tile: string;
+	index: number;
+	row: number;
+}
+
+interface EnergizedTile {
+	index: number;
+	row: number;
+}
+
+interface VisitedTile {
+	index: number;
+	row: number;
+	direction: Direction;
+}
+
+function getEnergizedTiles(grid: string[][], beam: Beam): number {
+	const originalGrid: string[][] = grid.map(row => row.map(tile => tile));
+	const energizedTiles: EnergizedTile[] = [{ index: beam.index, row: beam.row }]; // Initialize energizedTiles with the initial beam
+	let currentBeams: Beam[] = [beam]; // Initialize currentBeams with the initial beam
+	const visitedTiles: VisitedTile[] = []; // Initialize visitedTiles that'll contain all the tiles that have been visited alongside the direction they were visited from
 
 	while (currentBeams.length > 0) {
-		const nextBeams = []; // Store the next set of beams
+		const nextBeams: Beam[] = []; // Store the next set of beams
 
 		for (const currentBeam of currentBeams) {
-			// console.log(currentBeam.index, currentBeam.row, currentBeam.direction)
-
 			if (currentBeam.index >= grid[0].length || currentBeam.row >= grid.length) {
 				continue; // Skip to the next beam if the tile is undefined
 			} else {
-				const tile = { tile: originalGrid[currentBeam.row][currentBeam.index], index: currentBeam.index, row: currentBeam.row };
-				const outputBeams = getOutputBeams(tile, currentBeam);
+				const tile: Tile = { tile: originalGrid[currentBeam.row][currentBeam.index], index: currentBeam.index, row: currentBeam.row };
+				const outputBeams: Beam[] = getOutputBeams(tile, currentBeam);
 
 				for (const outputBeam of outputBeams) {
 					if (outputBeam.direction === 'right') {
@@ -43,7 +68,6 @@ function getEnergizedTiles(grid, beam) {
 						if (!energizedTiles.some(energizedTile => energizedTile.index === outputBeam.index && energizedTile.row === outputBeam.row)) {
 							energizedTiles.push({ index: outputBeam.index, row: outputBeam.row });
 						}
-
 					}
 				}
 			}
@@ -52,34 +76,26 @@ function getEnergizedTiles(grid, beam) {
 		currentBeams = nextBeams; // Update currentBeams to the next set of beams
 	}
 
-	// Print the grid with all the energized tiles bolded
-	let etCount = 0;
+	// Count energized tiles
+	let etCount: number = 0;
 	for (let i = 0; i < grid.length; i++) {
-		// let row = '';
 		for (let j = 0; j < grid[i].length; j++) {
 			if (energizedTiles.some(energizedTile => energizedTile.index === j && energizedTile.row === i)) {
-				// row += '#';
 				etCount++;
-			} else {
-				// row += '.';
 			}
 		}
-		// console.log(row);
 	}
 
 	return etCount;
-
 }
 
-function getOutputBeams(tile, beam) {
-	const outputBeams = [];
+function getOutputBeams(tile: Tile, beam: Beam): Beam[] {
+	const outputBeams: Beam[] = [];
 	// Empty Spaces
 	if (tile.tile === '.') {
-		// console.log("BEAM HIT EMPTY SPACE", tile)
 		outputBeams.push({ index: tile.index, row: tile.row, direction: beam.direction });
 		// Mirrors
 	} else if (tile.tile === '/' || tile.tile === '\\') {
-		// console.log("BEAM HIT MIRROR")
 		if (tile.tile === '/') {
 			if (beam.direction === 'right') {
 				outputBeams.push({ index: tile.index, row: tile.row, direction: 'up' });
@@ -103,7 +119,6 @@ function getOutputBeams(tile, beam) {
 		}
 		// Splitters
 	} else if (tile.tile === '|' || tile.tile === '-') {
-		// console.log("BEAM HIT SPLITTER")
 		if (tile.tile === '|') {
 			if (beam.direction === 'right' || beam.direction === 'left') {
 				outputBeams.push({ index: tile.index, row: tile.row, direction: 'up' });
@@ -121,69 +136,64 @@ function getOutputBeams(tile, beam) {
 		}
 	}
 
-	// console.log(outputBeams)
-
 	return outputBeams;
 }
 
+function part1(): number {
+	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	let result: number = 0;
 
-function part1() {
-	const grid = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').split('\n').map(line => line.split(''));
-	let result = 0;
-
-	const beam = { index: 0, row: 0, direction: 'right' };
-	const energizedTiles = getEnergizedTiles(grid, beam);
+	const grid: string[][] = input.split('\n').map(line => line.split(''));
+	const beam: Beam = { index: 0, row: 0, direction: 'right' };
+	const energizedTiles: number = getEnergizedTiles(grid, beam);
 
 	result = energizedTiles;
-
 	return result;
 }
 
-function part2() {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
-	let result = 0;
+function part2(): number {
+	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	let result: number = 0;
 
-	const beams = [];
+	const beams: Beam[] = [];
+	const lines: string[] = input.split('\n');
+	
 	// Add the following beams to the beams array
 	// Beams on all the top tiles going down
-	for (let i = 0; i < data.split('\n')[0].length; i++) {
+	for (let i = 0; i < lines[0].length; i++) {
 		beams.push({ index: i, row: 0, direction: 'down' });
 	}
 	// Beams on all the right tiles going left
-	for (let i = 0; i < data.split('\n').length; i++) {
-		beams.push({ index: data.split('\n')[0].length - 1, row: i, direction: 'left' });
+	for (let i = 0; i < lines.length; i++) {
+		beams.push({ index: lines[0].length - 1, row: i, direction: 'left' });
 	}
 	// Beams on all the bottom tiles going up
-	for (let i = 0; i < data.split('\n')[0].length; i++) {
-		beams.push({ index: i, row: data.split('\n').length - 1, direction: 'up' });
+	for (let i = 0; i < lines[0].length; i++) {
+		beams.push({ index: i, row: lines.length - 1, direction: 'up' });
 	}
 	// Beams on all the left tiles going right
-	for (let i = 0; i < data.split('\n').length; i++) {
+	for (let i = 0; i < lines.length; i++) {
 		beams.push({ index: 0, row: i, direction: 'right' });
 	}
 
-	let maxEnergizedTiles = 0;
-	let beamIndex = 0;
+	let maxEnergizedTiles: number = 0;
 	for (const beam of beams) {
-		const energizedTiles = getEnergizedTiles(data.split('\n').map(line => line.split('')), beam);
+		const energizedTiles: number = getEnergizedTiles(lines.map(line => line.split('')), beam);
 		if (energizedTiles > maxEnergizedTiles) {
 			maxEnergizedTiles = energizedTiles;
-			console.log(`Beam ${beamIndex} / ${beams.length} | New max with beam at ${beam.index}, ${beam.row} with direction ${beam.direction} energizing ${energizedTiles} tiles`);
-		} else {
-			console.log(`Beam ${beamIndex} / ${beams.length} | No new max`);
 		}
-		beamIndex++;
 	}
 
 	result = maxEnergizedTiles;
-
 	return result;
 }
 
-// console.log(`Part 1: ${part1()}`);
-// console.log(`Part 2: ${part2()}`);
+export interface Solution {
+	part1: () => number;
+	part2: () => number;
+}
 
 export default {
 	part1,
 	part2,
-};
+} as Solution;

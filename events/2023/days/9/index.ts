@@ -1,22 +1,23 @@
 import fs from 'fs';
 import path from 'path';
-const math = require('mathjs');
+import { fileURLToPath } from 'url';
 
-function extrapolate(nums, type) {
-	if (type == 'forwards') {
-		const originalNums = nums;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-		const subNums = [ nums ];
+type ExtrapolationType = 'forwards' | 'backwards';
 
-		const lastSubAllZero = () => {
-			return subNums[subNums.length - 1].every((num) => {
-				return num === 0;
-			});
+function extrapolate(nums: number[], type: ExtrapolationType): number[] {
+	if (type === 'forwards') {
+		const subNums: number[][] = [nums];
+
+		const lastSubAllZero = (): boolean => {
+			return subNums[subNums.length - 1].every(num => num === 0);
 		};
 
 		while (!lastSubAllZero()) {
 			// Make an array of the differences between each number of the last subNums
-			const diffs = [];
+			const diffs: number[] = [];
 			for (let i = 0; i < subNums[subNums.length - 1].length - 1; i++) {
 				diffs.push(subNums[subNums.length - 1][i + 1] - subNums[subNums.length - 1][i]);
 			}
@@ -24,31 +25,24 @@ function extrapolate(nums, type) {
 			// Add the diffs to the subNums
 			subNums.push(diffs);
 		}
-
-		// console.log(subNums)
 
 		// Predict the next number for the first subNums
 		subNums[subNums.length - 1].push(0);
 		for (let i = subNums.length - 2; i >= 0; i--) {
-
 			subNums[i].push(subNums[i + 1][subNums[i + 1].length - 1] + subNums[i][subNums[i].length - 1]);
 		}
 
 		return subNums[0];
-	} else if (type == 'backwards') {
-		const originalNums = nums;
+	} else if (type === 'backwards') {
+		const subNums: number[][] = [nums];
 
-		const subNums = [ nums ];
-
-		const lastSubAllZero = () => {
-			return subNums[subNums.length - 1].every((num) => {
-				return num === 0;
-			});
+		const lastSubAllZero = (): boolean => {
+			return subNums[subNums.length - 1].every(num => num === 0);
 		};
 
 		while (!lastSubAllZero()) {
 			// Make an array of the differences between each number of the last subNums
-			const diffs = [];
+			const diffs: number[] = [];
 			for (let i = 0; i < subNums[subNums.length - 1].length - 1; i++) {
 				diffs.push(subNums[subNums.length - 1][i + 1] - subNums[subNums.length - 1][i]);
 			}
@@ -56,8 +50,6 @@ function extrapolate(nums, type) {
 			// Add the diffs to the subNums
 			subNums.push(diffs);
 		}
-
-		// console.log(subNums)
 
 		// Predict the previous number for the first subNums
 		subNums[subNums.length - 1].unshift(0);
@@ -68,46 +60,43 @@ function extrapolate(nums, type) {
 		return subNums[0];
 	}
 
+	return [];
 }
 
-function part1() {
+function part1(): number {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	let result = 0;
 
 	for (const line of data.split('\n')) {
-		const originalLine = line;
-		const originalNums = line.split(' ');
-
 		const nums = line.split(' ').map(Number);
-		// console.log(nums)
-		let extrapolated = extrapolate(nums, 'forwards');
-		extrapolated = extrapolated[extrapolated.length - 1];
-
-		result += extrapolated;
+		const extrapolated = extrapolate(nums, 'forwards');
+		result += extrapolated[extrapolated.length - 1];
 	}
 
 	return result;
 }
 
-function part2() {
+function part2(): number {
 	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
 	let result = 0;
 
 	for (const line of data.split('\n')) {
-		const originalLine = line;
-		const originalNums = line.split(' ');
-
 		const nums = line.split(' ').map(Number);
-		let extrapolated = extrapolate(nums, 'backwards');
-		extrapolated = extrapolated[0];
-
-		result += extrapolated;
+		const extrapolated = extrapolate(nums, 'backwards');
+		result += extrapolated[0];
 	}
 
 	return result;
 }
 
-export default {
+interface Solution {
+	part1: () => number;
+	part2: () => number;
+}
+
+const solution: Solution = {
 	part1,
 	part2,
 };
+
+export default solution;
