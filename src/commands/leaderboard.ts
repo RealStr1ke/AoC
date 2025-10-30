@@ -256,7 +256,7 @@ export default class Leaderboard extends Command {
 					const maxDays = year >= 2025 ? 12 : 25;
 					let daysTop: string[];
 					let daysBottom: string[];
-					
+
 					if (year >= 2025) {
 						// For 12 days: "123456789012"
 						daysTop = '            '.split(''); // 12 spaces
