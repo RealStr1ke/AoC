@@ -258,12 +258,11 @@ export default class Leaderboard extends Command {
 					let daysBottom: string[];
 
 					if (year >= 2025) {
-						// For 12 days: "123456789012"
-						daysTop = '            '.split(''); // 12 spaces
+						daysTop = 	 '         111'.split('');
 						daysBottom = '123456789012'.split('');
 					} else {
 						// For 25 days: original format
-						daysTop = '         1111111111222222'.split('');
+						daysTop = 	 '         1111111111222222'.split('');
 						daysBottom = '1234567890123456789012345'.split('');
 					}
 
