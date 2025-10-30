@@ -8,7 +8,7 @@ import * as cheerio from 'cheerio';
 
 export default class Leaderboard extends Command {
 	static summary = 'Displays global/private leaderboards.';
-	static description = 'Displays global and private points/daily leaderboards for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified.';
+	static description = 'Displays global and private points/daily leaderboards for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified. Note: Global leaderboards are only available for years 2015-2024.';
 	static hidden = false;
 	static usage = 'aocs leaderboard (year) (day) [--global] [--private <code>] [--list]';
 	static examples = [
@@ -25,12 +25,12 @@ export default class Leaderboard extends Command {
 			description: 'Shows completion times leaderboard for both parts of day 15, 2023',
 		},
 		{
-			command: 'aocs leaderboard --list',
-			description: 'Lists all available private leaderboards',
+			command: 'aocs leaderboard 2025 --private 123456',
+			description: 'Shows private leaderboard with code 123456 for 2025 (global not available)',
 		},
 		{
-			command: 'aocs leaderboard 2023 --private 123456',
-			description: 'Shows private leaderboard with code 123456 for 2023',
+			command: 'aocs leaderboard --list',
+			description: 'Lists all available private leaderboards',
 		},
 	];
 	static strict = false;
@@ -51,7 +51,7 @@ export default class Leaderboard extends Command {
 	static flags = {
 		global: Flags.boolean({
 			char: 'g',
-			description: 'Show global points leaderboard for the year',
+			description: 'Show global points leaderboard for the year (2015-2024 only)',
 			exclusive: ['private', 'list'],
 			default: true,
 		}),
@@ -88,8 +88,8 @@ export default class Leaderboard extends Command {
 			this.error('You must specify the year and day explicitly since the current month isn\'t December.');
 		} else if (!eventYears.includes(year)) {
 			this.error('The year you specified is not available. The available years are: ' + eventYears.join(', '));
-		} else if (day > 25 || day < 1) {
-			this.error('Day must be between 1 and 25. Your input: ' + day);
+		} else if (day > (year >= 2025 ? 12 : 25) || day < 1) {
+			this.error(`Day must be between 1 and ${year >= 2025 ? 12 : 25} for year ${year}. Your input: ${day}`);
 		}
 
 		// Get the session cookie
@@ -250,27 +250,36 @@ export default class Leaderboard extends Command {
 						this.log(chalk.yellow.italic('No completions yet.'));
 					}
 				} else {
-					this.log(`${chalk.bold(`${chalk.hex('#FDFD66')(leaderboard?.owner)}'s ${chalk.italic('Private Leaderboard for 2024')}:`)}\n`);
+					this.log(`${chalk.bold(`${chalk.hex('#FDFD66')(leaderboard?.owner)}'s ${chalk.italic(`Private Leaderboard for ${year}`)}:`)}\n`);
 
-					// Leaderboard calendar header
-					const daysTop 	 = '         1111111111222222'.split('');
-					const daysBottom = '1234567890123456789012345'.split('');
+					// Leaderboard calendar header - adjust for different years
+					const maxDays = year >= 2025 ? 12 : 25;
+					let daysTop: string[];
+					let daysBottom: string[];
+					
+					if (year >= 2025) {
+						// For 12 days: "123456789012"
+						daysTop = '            '.split(''); // 12 spaces
+						daysBottom = '123456789012'.split('');
+					} else {
+						// For 25 days: original format
+						daysTop = '         1111111111222222'.split('');
+						daysBottom = '1234567890123456789012345'.split('');
+					}
 
-					for (let i = 0; i < 25; i++) {
+					for (let i = 0; i < maxDays; i++) {
 						const iDay = Date.now() > new Date(year, 11, i + 1).getTime() ? chalk.green : chalk.gray;
 						daysTop[i] = iDay(daysTop[i]);
 						daysBottom[i] = iDay(daysBottom[i]);
 					}
 
-
 					this.log('          ' + daysTop.join(''));
 					this.log('          ' + daysBottom.join(''));
-
 
 					// Create star visualization for each member
 					members.forEach((member, index) => {
 						let stars = '';
-						for (let dayNum = 1; dayNum <= 25; dayNum++) {
+						for (let dayNum = 1; dayNum <= maxDays; dayNum++) {
 							const dayCompletion = member.completion[dayNum];
 							if (!dayCompletion) {
 								stars += chalk.white('─');
@@ -297,6 +306,18 @@ export default class Leaderboard extends Command {
 
 		// Handle global leaderboard flag (default)
 		if (flags.global) {
+			// Check if global leaderboards are available for this year
+			if (year >= 2025) {
+				this.log(chalk.yellow.bold('Global leaderboards are no longer available starting from 2025.'));
+				this.log(chalk.gray('As announced by Eric Wastl, global leaderboards were discontinued to reduce'));
+				this.log(chalk.gray('stress and prevent competitive behavior that went against the spirit of AoC.'));
+				this.log();
+				this.log(chalk.cyan('You can still use:'));
+				this.log(chalk.cyan('• Private leaderboards: ') + chalk.white(`aocs leaderboard ${year} --private <code>`));
+				this.log(chalk.cyan('• List private leaderboards: ') + chalk.white(`aocs leaderboard ${year} --list`));
+				return;
+			}
+
 			if (explicit.day) {
 				const dailyTimesResponse = await axios.get(`https://adventofcode.com/${year}/leaderboard/day/${day}`, {
 					headers: {

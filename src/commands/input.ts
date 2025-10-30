@@ -61,8 +61,8 @@ export default class Input extends Command {
 		if (year < 2015 || year > new Date().getFullYear()) {
 			this.error('Year must be between 2015 and the current year. Your input: ' + year);
 		}
-		if (day > 25 || day < 1) {
-			this.error('Day must be between 1 and 25. Your input: ' + day);
+		if (day > (year >= 2025 ? 12 : 25) || day < 1) {
+			this.error(`Day must be between 1 and ${year >= 2025 ? 12 : 25} for year ${year}. Your input: ${day}`);
 		}
 
 		// Get the session cookie

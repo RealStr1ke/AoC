@@ -34,9 +34,11 @@ You can find my solutions in the [`events`](events) folder. Each yearly event ha
 
 `aocs submit (year) (day) [solution] -p [part]` - Submits the solution for the given year and day with the given part. If no solution is given, it'll use the solution saved in the `config.json` file.
 
-`aocs leaderboard (year) (day) [--global] [--private <code>] [--list]` - Displays global points leaderboards, private leaderboards, completion times, and personal stats for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified.
+`aocs leaderboard (year) (day) [--global] [--private <code>] [--list]` - Displays global points leaderboards, private leaderboards, completion times, and personal stats for Advent of Code challenges. Defaults to current year if not specified. Defaults to global points leaderboard if no flags are specified. **Note:** Global leaderboards are only available for years 2015-2024.
 
-`aocs stats (year) [--global] [--personal]` - Displays the global completion stats for the given year. If no year is given, it'll display the stats for the current year.
+`aocs stats (year) [--global] [--personal]` - Displays the global completion stats for the given year. If no year is given, it'll display the stats for the current year. **Note:** Global stats are only available for years 2015-2024.
+
+**Important:** Starting from 2025, Advent of Code events have 12 days instead of 25, and global leaderboards are no longer available. All commands have been updated to handle these changes automatically.
 
 ## Contributing
 

@@ -8,17 +8,17 @@ import { Spinner } from 'cli-spinner';
 
 export default class Create extends Command {
 	static summary = 'Setup a new challenge folder.';
-	static description = 'Creates a new folder for the given year and day with the template `index.js` solution file, `input.txt` file, and `README.md` file with the challenge description.';
+	static description = 'Creates a new folder for the given year and day with the template `index.js` solution file, `input.txt` file, and `README.md` file with the challenge description. Note: Years 2025+ have 12 days instead of 25.';
 	static hidden = false;
 	static usage = 'aocs create (year) (day) [--input]';
 	static examples = [
 		{
 			command: 'aocs create 2024 3',
-			description: 'Creates and sets up a new folder for the Day 3 of AoC\'s 2020 calendar',
+			description: 'Creates and sets up a new folder for Day 3 of AoC\'s 2024 calendar',
 		},
 		{
-			command: 'aocs create 2015 7 --input',
-			description: 'Creates and sets up a new folder for the Day 7 of AoC\'s 2015 calendar and retrieves the input',
+			command: 'aocs create 2025 7 --input',
+			description: 'Creates and sets up a new folder for Day 7 of AoC\'s 2025 calendar (12-day format) and retrieves the input',
 		},
 	];
 	static strict = false;
@@ -84,10 +84,11 @@ export default class Create extends Command {
 			this.log('\n');
 			this.error('Year must be between 2015 and the current year. Your input: ' + year);
 		}
-		if (day > 25 || day < 1) {
+		const maxDays = year >= 2025 ? 12 : 25;
+		if (day > maxDays || day < 1) {
 			validatingSpinner.stop(false);
 			this.log('\n');
-			this.error('Day must be between 1 and 25. Your input: ' + day);
+			this.error(`Day must be between 1 and ${maxDays} for year ${year}. Your input: ${day}`);
 		}
 		validatingSpinner.stop(false);
 		this.log(chalk.green('\nSuccessfully validated the command input.'));

@@ -7,21 +7,21 @@ import * as cheerio from 'cheerio';
 
 export default class Stats extends Command {
 	static summary = 'Displays the global or personal completion stats for the given year.';
-	static description = 'Displays the global or personal completion stats for the given year. If no year is given, it\'ll display the stats for the current year.';
+	static description = 'Displays the global or personal completion stats for the given year. If no year is given, it\'ll display the stats for the current year. Note: Global stats are only available for years 2015-2024.';
 	static hidden = false;
 	static usage = 'aocs stats (year) [--global] [--personal]';
 	static examples = [
 		{
 			command: 'aocs stats',
-			description: 'Displays the global completion stats for 2019.',
+			description: 'Displays the global completion stats for the current year (if available).',
 		},
 		{
 			command: 'aocs stats 2024 --global',
-			description: 'Displays the global completion stats for the 2024.',
+			description: 'Displays the global completion stats for 2024.',
 		},
 		{
-			command: 'aocs stats --personal',
-			description: 'Displays the personal completion stats for the current year.',
+			command: 'aocs stats 2025 --personal',
+			description: 'Displays the personal completion stats for 2025 (global not available).',
 		},
 	];
 	static strict = false;
@@ -39,7 +39,7 @@ export default class Stats extends Command {
 	static flags = {
 		global: Flags.boolean({
 			char: 'g',
-			description: 'Show global completion stats',
+			description: 'Show global completion stats (2015-2024 only)',
 			default: true,
 			exclusive: ['personal'],
 		}),
@@ -213,6 +213,16 @@ export default class Stats extends Command {
 
 		// Handle global stats (default)
 		if (flags.global) {
+			// Check if global stats are available for this year
+			if (year >= 2025) {
+				this.log(chalk.yellow.bold('Global stats are no longer available starting from 2025.'));
+				this.log(chalk.gray('As announced by Eric Wastl, global leaderboards and stats were discontinued'));
+				this.log(chalk.gray('to reduce stress and prevent competitive behavior.'));
+				this.log();
+				this.log(chalk.cyan('You can still use personal stats: ') + chalk.white(`aocs stats ${year} --personal`));
+				return;
+			}
+
 			// Retrieve the text
 			let text = '';
 			const endpoint = 'https://adventofcode.com';
