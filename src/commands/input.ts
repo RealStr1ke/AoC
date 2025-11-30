@@ -49,19 +49,19 @@ export default class Input extends Command {
 		// Parse the arguments
 		const { args, flags } = await this.parse(Input);
 		const year = args.year ?? new Date().getFullYear();
-		const day = args.day ?? new Date().getDate();
-		const explicit = args.day ?? false;
+		const day = args.day ?? (new Date().getMonth() === 11 ? new Date().getDate() : undefined);
+		const explicit = args.day !== undefined;
 
 		// Validate the input
-		if (!explicit && new Date().getMonth() !== 11) {
-			this.error('You must specify the year and day explicitly if it is not December.');
+		if (!explicit && day === undefined) {
+			this.error('You must specify the day explicitly since the current month isn\'t December.');
 		}
 
 		// Validate the year and day
 		if (year < 2015 || year > new Date().getFullYear()) {
 			this.error('Year must be between 2015 and the current year. Your input: ' + year);
 		}
-		if (day > (year >= 2025 ? 12 : 25) || day < 1) {
+		if (day !== undefined && (day > (year >= 2025 ? 12 : 25) || day < 1)) {
 			this.error(`Day must be between 1 and ${year >= 2025 ? 12 : 25} for year ${year}. Your input: ${day}`);
 		}
 

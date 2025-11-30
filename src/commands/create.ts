@@ -54,8 +54,8 @@ export default class Create extends Command {
 		// Parse the arguments
 		const { args, flags } = await this.parse(Create);
 		const year = args.year ?? new Date().getFullYear();
-		const day = args.day ?? new Date().getDate();
-		const explicit = args.day ?? false;
+		const day = args.day ?? (new Date().getMonth() === 11 ? new Date().getDate() : undefined);
+		const explicit = args.day !== undefined;
 
 		// Set default spinner text
 		Spinner.setDefaultSpinnerString(18);
@@ -72,10 +72,10 @@ export default class Create extends Command {
 		validatingSpinner.start();
 
 		// Validate the input
-		if (!explicit && new Date().getMonth() !== 11) {
+		if (!explicit && day === undefined) {
 			validatingSpinner.stop(false);
 			this.log('\n');
-			this.error('You must specify the year and day explicitly if it is not December.');
+			this.error('You must specify the day explicitly since the current month isn\'t December.');
 		}
 
 		// Validate the year and day

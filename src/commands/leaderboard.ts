@@ -71,7 +71,7 @@ export default class Leaderboard extends Command {
 		// Parse the arguments
 		const { args, flags } = await this.parse(Leaderboard);
 		const year = args.year ?? new Date().getFullYear();
-		const day = args.day ?? new Date().getDate();
+		const day = args.day ?? (new Date().getMonth() === 11 ? new Date().getDate() : undefined);
 		const explicit = {
 			year: args.year !== undefined,
 			day: args.day !== undefined,
@@ -84,11 +84,18 @@ export default class Leaderboard extends Command {
 		eventsPage('.eventlist-event a').each((_, element) => { eventYears.push(parseInt(eventsPage(element).text().replace(/\[|\]/g, ''))); });
 
 		// Validate the input
-		if (!explicit.year && new Date().getMonth() !== 11) {
-			this.error('You must specify the year and day explicitly since the current month isn\'t December.');
-		} else if (!eventYears.includes(year)) {
+		// Skip day validation for --list and --private flags (they don't require a day)
+		if (!flags.list && !flags.private) {
+			if (!explicit.year && new Date().getMonth() !== 11) {
+				this.error('You must specify the year and day explicitly since the current month isn\'t December.');
+			} else if (!explicit.day && day === undefined) {
+				this.error('You must specify the day explicitly since the current month isn\'t December.');
+			}
+		}
+		
+		if (!eventYears.includes(year)) {
 			this.error('The year you specified is not available. The available years are: ' + eventYears.join(', '));
-		} else if (day > (year >= 2025 ? 12 : 25) || day < 1) {
+		} else if (day !== undefined && (day > (year >= 2025 ? 12 : 25) || day < 1)) {
 			this.error(`Day must be between 1 and ${year >= 2025 ? 12 : 25} for year ${year}. Your input: ${day}`);
 		}
 
@@ -195,7 +202,7 @@ export default class Leaderboard extends Command {
 				// Sort members by local score (descending)
 				members.sort((a, b) => b.score.local - a.score.local);
 
-				if (explicit.day) {
+				if (explicit.day && day !== undefined) {
 					this.log(`${chalk.bold(`${chalk.hex('#FDFD66')(leaderboard?.owner)}'s ${chalk.italic(`Private Leaderboard for ${year}, Day ${day}`)}:`)}\n`);
 
 					const part1Members = members

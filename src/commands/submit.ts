@@ -83,7 +83,7 @@ export default class Submit extends Command {
 		// Parse the arguments
 		const { args, flags } = await this.parse(Submit);
 		const year = args.year ?? new Date().getFullYear();
-		const day = args.day ?? new Date().getDate();
+		const day = args.day ?? (new Date().getMonth() === 11 ? new Date().getDate() : undefined);
 		const part = flags.part ?? '1';
 		const explicit = {
 			year: args.year !== undefined,
@@ -98,14 +98,16 @@ export default class Submit extends Command {
 		eventsPage('.eventlist-event a').each((_, element) => { eventYears.push(parseInt(eventsPage(element).text().replace(/\[|\]/g, ''))); });
 
 		// Validate the input
-		if ((!explicit.year || !explicit.day) && new Date().getMonth() !== 11) {
+		if ((!explicit.year || !explicit.day) && day === undefined) {
 			this.error('You must specify the year and day explicitly since the current month isn\'t December.');
 		} else if (!eventYears.includes(year)) {
 			this.error('The year you specified is not available. The available years are: ' + eventYears.join(', '));
-		} else if (!explicit.day && new Date().getDate() > (year >= 2025 ? 12 : 25)) {
+		} else if (!explicit.day && day !== undefined && new Date().getDate() > (year >= 2025 ? 12 : 25)) {
 			this.error(`You must specify the day explicitly since the current day is after the ${year >= 2025 ? 12 : 25}th.`);
-		} else if (day > (year >= 2025 ? 12 : 25) || day < 1) {
+		} else if (day !== undefined && (day > (year >= 2025 ? 12 : 25) || day < 1)) {
 			this.error(`Day must be between 1 and ${year >= 2025 ? 12 : 25} for year ${year}. Your input: ${day}`);
+		} else if (day === undefined) {
+			this.error('You must specify the day explicitly since the current month isn\'t December.');
 		} else if (flags.part && flags.part !== '1' && flags.part !== '2') {
 			this.error('Part must be either 1 or 2. Your input: ' + flags.part);
 		}
