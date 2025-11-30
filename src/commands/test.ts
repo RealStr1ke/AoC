@@ -305,8 +305,8 @@ export default class Test extends Command {
 
 		if (total > 0) {
 			this.log(chalk.bold('Results:'));
-			if (passed > 0) this.log(chalk.green(`  ✓ ${passed}/${total} passed`));
-			if (failed > 0) this.log(chalk.red(`  ✗ ${failed}/${total} failed`));
+			if (passed > 0) this.log(chalk.green(`  ✓ ${passed} passed`));
+			if (failed > 0) this.log(chalk.red(`  ✗ ${failed} failed`));
 		}
 	}
 }

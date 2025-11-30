@@ -147,7 +147,7 @@ export default class Run extends Command {
 					if (part === '1' || part === 'both') {
 						const expected = testCase.expected.part1;
 						if (expected === null) {
-							this.log(`  Part 1: ${chalk.gray('(disabled - no expected value)')}`);
+							this.log(`  Part 1: ${chalk.gray('disabled')}`);
 						} else {
 							try {
 								const stopwatch = new Stopwatch();
@@ -185,7 +185,7 @@ export default class Run extends Command {
 					if (part === '2' || part === 'both') {
 						const expected = testCase.expected.part2;
 						if (expected === null) {
-							this.log(`  Part 2: ${chalk.gray('(disabled - no expected value)')}`);
+							this.log(`  Part 2: ${chalk.gray('disabled')}`);
 						} else {
 							try {
 								const stopwatch = new Stopwatch();
