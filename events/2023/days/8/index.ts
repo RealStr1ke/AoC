@@ -13,8 +13,15 @@ interface Route {
 type Routes = Record<string, Route>;
 type Direction = 'L' | 'R';
 
-function part1(): number {
-	const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part1(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
 	const rawLines = input.split('\n');
 
 	const turns = rawLines[0].split('') as Direction[];
@@ -59,8 +66,15 @@ function lcm(a: number, b: number): number {
 	return (a * b) / gcd(a, b);
 }
 
-function part2(): number {
-	const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part2(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
 	const rawLines = input.split('\n');
 
 	const turns = rawLines[0].split('') as Direction[];
@@ -110,8 +124,8 @@ function part2(): number {
 }
 
 interface Solution {
-	part1: () => number;
-	part2: () => number;
+	part1: (inputSource?: string | { file: string }) => number;
+	part2: (inputSource?: string | { file: string }) => number;
 }
 
 const solution: Solution = {

@@ -201,8 +201,15 @@ function findObstuctionsForLoop(gridMap: string[][]): number[][] {
 	return obstructions;
 }
 
-function part1(): number {
-	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part1(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
 	let result: number = 0;
 
 	const gridMap: string[][] = [];
@@ -219,8 +226,15 @@ function part1(): number {
 	return result;
 }
 
-function part2(): number {
-	const input: string = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part2(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
 	let result: number = 0;
 
 	const gridMap: string[][] = [];
@@ -233,8 +247,8 @@ function part2(): number {
 }
 
 export interface Solution {
-	part1: () => number;
-	part2: () => number;
+	part1: (inputSource?: string | { file: string }) => number;
+	part2: (inputSource?: string | { file: string }) => number;
 }
 
 export default {

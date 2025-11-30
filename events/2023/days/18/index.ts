@@ -112,8 +112,16 @@ function hexToMagDir(hex: string): [number, Direction] {
 	return [mag, dir];
 }
 
-function part1(): number {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part1(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
+	const data = input;
 
 	const digPlan: DigInstruction[] = [];
 
@@ -131,8 +139,16 @@ function part1(): number {
 	return calculateArea(digPlan);
 }
 
-function part2(): number {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part2(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
+	const data = input;
 
 	const digPlan: DigInstruction[] = [];
 
@@ -151,8 +167,8 @@ function part2(): number {
 }
 
 interface Solution {
-	part1: () => number;
-	part2: () => number;
+	part1: (inputSource?: string | { file: string }) => number;
+	part2: (inputSource?: string | { file: string }) => number;
 }
 
 const solution: Solution = {

@@ -151,8 +151,16 @@ function platformsMatch(platform1: Platform, platform2: Platform): boolean {
 	return true;
 }
 
-function part1(): number {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part1(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
+	const data = input;
 	let result = 0;
 
 	let platform = data.split('\n').map(line => line.split(''));
@@ -170,8 +178,16 @@ function part1(): number {
 	return result;
 }
 
-function part2(): number {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part2(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
+	const data = input;
 	let result = 0;
 
 	let platform = data.split('\n').map(line => line.split(''));
@@ -214,8 +230,8 @@ function part2(): number {
 }
 
 interface Solution {
-	part1: () => number;
-	part2: () => number;
+	part1: (inputSource?: string | { file: string }) => number;
+	part2: (inputSource?: string | { file: string }) => number;
 }
 
 const solution: Solution = {

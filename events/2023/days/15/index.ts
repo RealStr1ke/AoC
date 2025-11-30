@@ -26,8 +26,16 @@ function parseHASH(hash: string): number {
 	return value;
 }
 
-function part1(): number {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+function part1(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
+	const data = input;
 	let result = 0;
 
 	for (const line of data.split(',')) {
@@ -37,8 +45,16 @@ function part1(): number {
 	return result;
 }
 
-function part2(): number {
-	const data = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').split(',');
+function part2(inputSource?: string | { file: string }): number {
+	let input: string;
+	if (!inputSource) {
+		input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8');
+	} else if (typeof inputSource === 'string') {
+		input = inputSource;
+	} else {
+		input = fs.readFileSync(path.join(__dirname, inputSource.file), 'utf8');
+	}
+	const data = input.split(',');
 	let result = 0;
 
 	const boxes: Box[] = [];
@@ -106,8 +122,8 @@ function part2(): number {
 }
 
 interface Solution {
-	part1: () => number;
-	part2: () => number;
+	part1: (inputSource?: string | { file: string }) => number;
+	part2: (inputSource?: string | { file: string }) => number;
 }
 
 const solution: Solution = {
