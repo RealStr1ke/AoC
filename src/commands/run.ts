@@ -42,6 +42,14 @@ export default class Run extends Command {
 			char: 'p',
 			description: 'The part of the challenge to run',
 		}),
+		tests: Flags.boolean({
+			char: 't',
+			description: 'Run tests before running the solution',
+		}),
+		strict: Flags.boolean({
+			char: 's',
+			description: 'Only run solution if all tests pass (requires --tests)',
+		}),
 	};
 
 	private runPart(day: any, part: number): { result: number, time: number } {
@@ -88,6 +96,8 @@ export default class Run extends Command {
 			this.error('You must specify the day explicitly since the current month isn\'t December.');
 		} else if (flags.part && flags.part !== '1' && flags.part !== '2' && flags.part !== 'both') {
 			this.error('Part must be either 1, 2 or both. Your input: ' + flags.part);
+		} else if (flags.strict && !flags.tests) {
+			this.error('The --strict flag requires --tests to be set.');
 		}
 
 		// Stop the validating spinner
@@ -104,6 +114,125 @@ export default class Run extends Command {
 			}
 		}
 
+		// Run tests if --tests flag is set
+		if (flags.tests) {
+			const testsDir = path.join(dir, 'tests');
+			const casesPath = path.join(testsDir, 'cases.json');
+
+			if (!fs.existsSync(testsDir) || !fs.existsSync(casesPath)) {
+				this.log(chalk.yellow(`⚠ No tests found for ${year} Day ${day}. Skipping tests.\n`));
+			} else {
+				this.log(chalk.bold.hex('#FDFD66')(`Running tests for Day ${day}, ${year}...\n`));
+
+				// Load test cases
+				const testCasesData = fs.readFileSync(casesPath, 'utf8');
+				const testCases: any = JSON.parse(testCasesData);
+
+				const solution = await import(indexPath);
+				let allPassed = true;
+				let hasTests = false;
+
+				for (const testCase of testCases.cases) {
+					const testFilePath = path.join(testsDir, testCase.file);
+					if (!fs.existsSync(testFilePath)) {
+						continue;
+					}
+
+					hasTests = true;
+					this.log(chalk.cyan.bold(`Test: ${testCase.name}`));
+
+					const part = flags.part || 'both';
+
+					// Run part 1 test
+					if (part === '1' || part === 'both') {
+						const expected = testCase.expected.part1;
+						if (expected === null) {
+							this.log(`  Part 1: ${chalk.gray('(disabled - no expected value)')}`);
+						} else {
+							try {
+								const stopwatch = new Stopwatch();
+								stopwatch.start();
+								
+								let result: number;
+								const partFunc = solution.default.part1;
+								try {
+									result = partFunc({ file: path.join('tests', testCase.file) });
+								} catch {
+									try {
+										const inputData = fs.readFileSync(testFilePath, 'utf8');
+										result = partFunc(inputData);
+									} catch (error2) {
+										throw new Error(`Solution uses old signature. Update part1() to accept: part1(inputSource?: string | { file: string })`);
+									}
+								}
+								
+								stopwatch.stop();
+								const passed = result === expected;
+
+								if (!passed) allPassed = false;
+
+								const icon = passed ? chalk.green('✓') : chalk.red('✗');
+								const expectedStr = `(expected: ${chalk.yellow(expected)})`;
+								this.log(`  Part 1: ${chalk.white(result)} ${expectedStr} ${icon}`);
+							} catch (error) {
+								allPassed = false;
+								this.log(chalk.red(`  Part 1: Error - ${error}`));
+							}
+						}
+					}
+
+					// Run part 2 test
+					if (part === '2' || part === 'both') {
+						const expected = testCase.expected.part2;
+						if (expected === null) {
+							this.log(`  Part 2: ${chalk.gray('(disabled - no expected value)')}`);
+						} else {
+							try {
+								const stopwatch = new Stopwatch();
+								stopwatch.start();
+								
+								let result: number;
+								const partFunc = solution.default.part2;
+								try {
+									result = partFunc({ file: path.join('tests', testCase.file) });
+								} catch {
+									try {
+										const inputData = fs.readFileSync(testFilePath, 'utf8');
+										result = partFunc(inputData);
+									} catch (error2) {
+										throw new Error(`Solution uses old signature. Update part2() to accept: part2(inputSource?: string | { file: string })`);
+									}
+								}
+								
+								stopwatch.stop();
+								const passed = result === expected;
+
+								if (!passed) allPassed = false;
+
+								const icon = passed ? chalk.green('✓') : chalk.red('✗');
+								const expectedStr = `(expected: ${chalk.yellow(expected)})`;
+								this.log(`  Part 2: ${chalk.white(result)} ${expectedStr} ${icon}`);
+							} catch (error) {
+								allPassed = false;
+								this.log(chalk.red(`  Part 2: Error - ${error}`));
+							}
+						}
+					}
+
+					this.log();
+				}
+
+				if (hasTests) {
+					if (flags.strict && !allPassed) {
+						this.log(chalk.red.bold('⚠ Tests failed. Skipping solution run due to --strict flag.\n'));
+						return;
+					}
+
+					this.log(chalk.bold.hex('#FDFD66')(`Running solution with real input...\n`));
+				}
+			}
+		}
+
 		// Load the config file
 		const configPath = path.join(__dirname, '..', '..', 'config.json');
 		const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
@@ -113,7 +242,8 @@ export default class Run extends Command {
 
 		// Run the solution
 		const solution = await import(indexPath);
-		if (flags.part === '1' || flags.part === 'both') {
+		const part = flags.part || 'both';
+		if (part === '1' || part === 'both') {
 			// Start the spinner for part 1
 			const part1Spinner = new Spinner({
 				text: chalk.gray('Running part 1... %s'),
@@ -135,7 +265,7 @@ export default class Run extends Command {
 				this.log(chalk.red('An error occurred while running part 1.\n Error: ' + error));
 			}
 		}
-		if (flags.part === '2' || flags.part === 'both') {
+		if (part === '2' || part === 'both') {
 			// Start the spinner for part 2
 			const part2Spinner = new Spinner({
 				text: chalk.gray('Running part 2... %s'),

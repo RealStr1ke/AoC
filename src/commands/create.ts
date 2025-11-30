@@ -48,6 +48,10 @@ export default class Create extends Command {
 			char: 'f',
 			description: 'Whether or not to overwrite the existing files',
 		}),
+		test: Flags.boolean({
+			char: 't',
+			description: 'Create test folder structure with test1.txt and cases.json',
+		}),
 	};
 
 	public async run(): Promise<void> {
@@ -251,6 +255,58 @@ export default class Create extends Command {
 			} catch (error) {
 				writeReadmeSpinner.stop(false);
 				this.log(chalk.red('\nFailed to write the README file. \n Error: ') + error);
+			}
+		}
+
+		// Create test structure if --test flag is set
+		if (flags.test) {
+			const testsDir = path.join(dir, 'tests');
+			const casesPath = path.join(testsDir, 'cases.json');
+			const test1Path = path.join(testsDir, 'test1.txt');
+
+			const writeTestsSpinner = new Spinner({
+				text: chalk.gray('Creating test structure... %s'),
+				stream: process.stderr,
+				onTick: function(msg: string) {
+					this.clearLine(this.stream);
+					this.stream.write(msg);
+				},
+			});
+			writeTestsSpinner.start();
+
+			try {
+				// Create tests directory
+				if (!fs.existsSync(testsDir)) {
+					fs.mkdirSync(testsDir, { recursive: true });
+				}
+
+				// Create cases.json
+				if (!fs.existsSync(casesPath) || flags.force) {
+					const emptyCases = {
+						cases: [
+							{
+								name: 'Example 1',
+								file: 'test1.txt',
+								expected: {
+									part1: null,
+									part2: null,
+								},
+							},
+						],
+					};
+					fs.writeFileSync(casesPath, JSON.stringify(emptyCases, null, 2));
+				}
+
+				// Create test1.txt
+				if (!fs.existsSync(test1Path) || flags.force) {
+					fs.writeFileSync(test1Path, '');
+				}
+
+				writeTestsSpinner.stop(false);
+				this.log(chalk.green('\nSuccessfully created test structure.'));
+			} catch (error) {
+				writeTestsSpinner.stop(false);
+				this.log(chalk.red('\nFailed to create test structure. \n Error: ') + error);
 			}
 		}
 

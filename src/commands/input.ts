@@ -57,11 +57,15 @@ export default class Input extends Command {
 			this.error('You must specify the day explicitly since the current month isn\'t December.');
 		}
 
+		if (day === undefined) {
+			this.error('Day is required.');
+		}
+
 		// Validate the year and day
 		if (year < 2015 || year > new Date().getFullYear()) {
 			this.error('Year must be between 2015 and the current year. Your input: ' + year);
 		}
-		if (day !== undefined && (day > (year >= 2025 ? 12 : 25) || day < 1)) {
+		if (day > (year >= 2025 ? 12 : 25) || day < 1) {
 			this.error(`Day must be between 1 and ${year >= 2025 ? 12 : 25} for year ${year}. Your input: ${day}`);
 		}
 
