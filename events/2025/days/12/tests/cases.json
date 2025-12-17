@@ -1,0 +1,12 @@
+{
+  "cases": [
+    {
+      "name": "Example 1",
+      "file": "test1.txt",
+      "expected": {
+        "part1": 2,
+        "part2": null
+      }
+    }
+  ]
+}
