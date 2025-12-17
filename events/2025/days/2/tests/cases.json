@@ -1,12 +1,12 @@
 {
-	"cases": [
-		{
-			"name": "Example 1",
-			"file": "test1.txt",
-			"expected": {
-				"part1": 1227775554,
-				"part2": 4174379265
-			}
-		}
-	]
+    "cases": [
+        {
+            "name": "Example 1",
+            "file": "test1.txt",
+            "expected": {
+                "part1": 1227775554,
+                "part2": 4174379265
+            }
+        }
+    ]
 }
